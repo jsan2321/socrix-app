@@ -5,7 +5,19 @@ export const DocumentRowSchema = z.object({
   title: z.string(),
   content_hash: z.string(),
   status: z.enum(["processing", "ready", "failed"]),
-  failure_reason: z.string().nullable().optional(),
+  failure_reason: z
+    .enum([
+      "encrypted",
+      "malformed",
+      "no_extractable_text",
+      "likely_scanned",
+      "embedding_error",
+      "unknown",
+    ])
+    .nullable()
+    .optional(),
+  page_count: z.number().int().positive().nullable().optional(),
+  chunks_total: z.number().int().nonnegative().nullable().optional(),
   chunks_embedded_count: z.number().int().nonnegative(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -15,13 +27,27 @@ export const DocumentChunkRowSchema = z.object({
   id: z.string().uuid(),
   document_id: z.string().uuid(),
   chunk_index: z.number().int().nonnegative(),
+  page_start: z.number().int().positive(),
+  page_end: z.number().int().positive(),
+  paragraph_start: z.number().int().positive(),
+  paragraph_end: z.number().int().positive(),
+  sentence_start: z.number().int().positive(),
+  sentence_end: z.number().int().positive(),
+  heading: z.string().nullable().optional(),
   text: z.string(),
   token_count: z.number().int().positive(),
-  page_start: z.number().int().optional(),
-  page_end: z.number().int().optional(),
-  paragraph_start: z.number().int().optional(),
-  paragraph_end: z.number().int().optional(),
-  heading: z.string().optional(),
+  embedding: z
+    .preprocess((val) => {
+      if (typeof val === "string") {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return val;
+        }
+      }
+      return val;
+    }, z.array(z.number()))
+    .optional(),
   created_at: z.string(),
 });
 
@@ -31,7 +57,9 @@ export const QuizQuestionRowSchema = z.object({
   concept: z.string(),
   difficulty: z.enum(["foundational", "intermediate", "advanced"]),
   grounding_chunk_ids: z.array(z.string().uuid()),
+  generation_provider: z.string(),
   generation_model: z.string(),
+  generation_attempts: z.number().int().min(1).default(1),
   created_at: z.string(),
 });
 
@@ -40,7 +68,7 @@ export const QuizStatementRowSchema = z.object({
   question_id: z.string().uuid(),
   text: z.string(),
   is_true: z.boolean(),
-  grounding_rationale: z.string().optional(),
+  grounding_rationale: z.string(),
   display_order: z.number().int().min(0).max(2),
 });
 

@@ -47,8 +47,37 @@ export const AnswerSubmissionSchema = z.object({
     .max(5, "Maximum confidence level is 5"),
 });
 
+export const SessionResultsResponseSchema = z.object({
+  sessionId: z.string().uuid("Invalid session ID format"),
+  documentTitle: z.string(),
+  totalAnswered: z.number().int().min(0),
+  accuracy: z.number().min(0).max(1),
+  confidenceTracer: z.object({
+    points: z.array(
+      z.object({
+        answeredAt: z.string(),
+        questionConcept: z.string(),
+        confidenceLevel: z.union([
+          z.literal(1),
+          z.literal(2),
+          z.literal(3),
+          z.literal(4),
+          z.literal(5),
+        ]),
+        correct: z.boolean(),
+        usedEvidence: z.boolean(),
+      })
+    ),
+    rollingGap: z.number(),
+    overconfidenceRate: z.number().min(0).max(1),
+    underconfidenceRate: z.number().min(0).max(1),
+  }),
+  confidenceGapAlert: z.boolean(),
+});
+
 export type UploadDocumentInput = z.infer<typeof UploadDocumentSchema>;
 export type QuizRequestInput = z.infer<typeof QuizRequestSchema>;
 export type EvidenceRequestInput = z.infer<typeof EvidenceRequestSchema>;
 export type CreateSessionInput = z.infer<typeof CreateSessionSchema>;
 export type AnswerSubmissionInput = z.infer<typeof AnswerSubmissionSchema>;
+export type SessionResultsResponse = z.infer<typeof SessionResultsResponseSchema>;
