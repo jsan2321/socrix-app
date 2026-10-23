@@ -1,164 +1,180 @@
-# 🎓 The Socratic Cross-Examiner — AI Retrieval Practice
+# 🎓 The Socratic Cross-Examiner — Plataforma de Evaluación Socrática con IA & RAG
 
-> **Eliminate illusions of competence through source-grounded "2 Lies + 1 Truth" Socratic cross-examination.**
+> **Elimina la ilusión de competencia mediante evaluaciones socráticas de "2 Mentiras + 1 Verdad" fundamentadas directamente en tus documentos.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-pgvector-emerald?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+[![Vitest](https://img.shields.io/badge/Vitest-3.2-yellow?style=for-the-badge&logo=vitest)](https://vitest.dev/)
 
 ---
 
-## 🌟 Overview
+## 🌟 Descripción General
 
-**The Socratic Cross-Examiner** is an AI-powered retrieval practice platform designed to test deep conceptual understanding of text rather than shallow recall.
+**The Socratic Cross-Examiner** es una plataforma educativa full-stack de práctica de recuperación (*retrieval practice*) basada en IA. A diferencia de los cuestionarios tradicionales que promueven la memorización superficial, este sistema evalúa la comprensión conceptual profunda y expone puntos ciegos de conocimiento.
 
-Traditional quizzes ask you to recall factual statements. The Socratic Cross-Examiner takes any uploaded PDF document, breaks it down into semantic chunks, and generates **"2 Lies + 1 Truth"** Socratic challenge questions. The distractors ("lies") are designed by a Devil's Advocate AI engine to target subtle, highly plausible misconceptions—forcing learners to rigorously distinguish truth from falsehood.
-
----
-
-## ✨ Key Features
-
-- 📄 **PDF Parser & Semantic Chunker**: Parses documents up to 50MB and chunks them by headers/paragraphs with exact page & sentence coordinates.
-- ⚡ **Source-Grounded RAG (Zero Hallucinations)**: Embeds document chunks into Supabase using `pgvector` (`text-embedding-3-small`) to ground every statement directly in original text.
-- 🎯 **Devil's Advocate Socratic Engine**: Generates 2 subtle lies + 1 true statement per question, forcing deep analytical evaluation.
-- 📊 **Confidence & Calibration Analytics**: Tracks user accuracy against stated confidence levels to highlight overconfidence bias and knowledge blind spots.
-- 🔌 **Multi-Provider LLM Abstraction**: Supports **DeepSeek** (`deepseek-chat`), **OpenAI** (`gpt-4o-mini`, `gpt-4o`), and **Qwen** out of the box with fallback support.
-- 🛡️ **Strict Zod Schema Validation**: Automated repair and validation loop ensuring zero malformed JSON responses.
+El sistema procesa cualquier archivo PDF, lo divide en fragmentos semánticos respetando encabezados y coordenadas de página, y genera desafíos de **"2 Mentiras + 1 Verdad"** mediante un motor de IA que asume el rol de "Abogado del Diablo". Los distractores están diseñados deliberadamente como conceptos erróneos altamente plausibles, obligando al estudiante a discriminar con rigor la verdad y evitando la ilusión de competencia.
 
 ---
 
-## 🛠️ Technology Stack
+## ✨ Características Principales
 
-| Component | Technology |
+- 📄 **Ingesta y Segmentación Semántica de PDFs**: Analiza documentos en memoria, extrayendo estructura jerárquica (encabezados, párrafos y números de página) con saneamiento automático contra caracteres nulos (`\u0000`).
+- ⚡ **RAG Fundamentado con pgvector (Cero Alucinaciones)**: Genera embeddings de 1536 dimensiones (`text-embedding-3-small`) indexados con **HNSW** en Supabase PostgreSQL para recuperar evidencia con procedencia exacta del documento.
+- 🎯 **Motor Socrático del "Abogado del Diablo"**: Formula preguntas de razonamiento donde dos afirmaciones son sutiles falacias plausibles y una es la verdad, invirtiendo la carga cognitiva del estudiante.
+- 📊 **Trazador de Confianza y Calibración Metacognitiva**: Registra el nivel de certeza del usuario en cada respuesta frente a su precisión real, detectando sesgos de sobreconfianza mediante gráficos interactivos y alertas de brecha de comprensión.
+- 🧠 **Repetición Espaciada (Algoritmo SM-2)**: Programa automáticamente repasos en intervalos optimizados según la dificultad y el rendimiento histórico del usuario.
+- 🛡️ **Seguridad y Resiliencia de Nivel de Producción**:
+  - Control de acceso multiusuario mediante **Supabase Auth** y **Row-Level Security (RLS)** en todas las tablas.
+  - *Rate limiting* atómico distribuido en PostgreSQL para prevenir abusos en endpoints serverless.
+  - Validación estricta con esquemas **Zod** y bucle de autoreparación ante respuestas malformadas de LLMs.
+  - Arquitectura multi-proveedor (**OpenAI**, **DeepSeek**, **Qwen**) con mecanismo de respaldo silencioso (*fallback circuit-breaker*).
+- 🌐 **Soporte Bilingüe Nativo (Español / Inglés)**: Interfaz de usuario e inferencia de preguntas completamente localizadas.
+- 📁 **Gestión de Biblioteca y Dashboard**: Flujo de carga en dos fases (previsualización/edición antes de procesar), cancelación y eliminación en cascada de documentos y sesiones.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+| Capa | Tecnologías |
 |---|---|
-| **Framework** | Next.js 16 (App Router) |
-| **Language** | TypeScript (Strict Mode) |
-| **Styling** | Tailwind CSS + Lucide Icons + Shadcn UI |
-| **Database & Vector Search** | Supabase PostgreSQL + `pgvector` extension |
-| **AI Providers** | DeepSeek V3, OpenAI, Qwen (OpenAI-compatible adapter pattern) |
-| **Embeddings** | OpenAI `text-embedding-3-small` (1536-dim) |
-| **Testing** | Vitest (Unit & Integration) + Playwright (E2E) |
+| **Frontend & Servidor** | Next.js 16 (App Router), React 19, TypeScript (Strict Mode) |
+| **Estilos & UI** | Tailwind CSS, Lucide Icons, Shadcn UI, Framer Motion |
+| **Base de Datos & Búsqueda Vectorial** | Supabase PostgreSQL 15+ con extensión `pgvector` (índices HNSW) |
+| **Autenticación & Autorización** | Supabase Auth (SSR Cookies) con políticas RLS y middleware fail-closed |
+| **Modelos de Lenguaje (LLMs)** | OpenAI (GPT-4o-mini, GPT-4o), DeepSeek V3, Qwen (Alibaba Cloud) |
+| **Embeddings** | OpenAI `text-embedding-3-small` (1536 dimensiones) |
+| **Testing & Calidad** | Vitest (38 suites de pruebas unitarias e integración), Playwright (E2E), ESLint |
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Instalación y Puesta en Marcha
 
-### 1. Prerequisites
+### 1. Requisitos Previos
 
-- **Node.js**: v18.0.0 or higher
-- **Supabase Account**: Free project on [supabase.com](https://supabase.com) OR local Docker Supabase CLI.
-- **AI API Key**: DeepSeek API Key, OpenAI API Key, or Qwen API Key.
+- **Node.js**: v20.0.0 o superior
+- **Cuenta de Supabase**: Proyecto en [supabase.com](https://supabase.com) (o instancia local mediante Supabase CLI)
+- **API Key de IA**: OpenAI API Key (requerida para embeddings), y opcionalmente DeepSeek / Qwen.
 
-### 2. Environment Setup
+### 2. Configuración de Variables de Entorno
 
-Clone the repository and create your `.env.local` file inside `socratic-cross-examiner/`:
+Clona el repositorio e ingresa a la carpeta del proyecto:
 
 ```bash
+git clone git@github.com:jsan2321/socratic-cross-examiner.git
+cd socratic-cross-examiner
 cp .env.example .env.local
 ```
 
-Configure your `.env.local`:
+Configura tu archivo `.env.local`:
 
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-# Supabase Configuration
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-SUPABASE_ANON_KEY=your-supabase-anon-key
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON=your-supabase-anon-token
+# Supabase
+SUPABASE_URL=https://tu-proyecto.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=tu-service-role-key-secreta
+SUPABASE_ANON_KEY=tu-anon-key-publica
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON=tu-anon-key-publica
 
-# AI Provider Choice ('deepseek' | 'openai' | 'qwen')
-AI_PROVIDER=deepseek
-AI_MODEL=deepseek-chat
+# Proveedor de IA ('openai' | 'deepseek' | 'qwen')
+AI_PROVIDER=openai
+AI_MODEL=gpt-4o-mini
 AI_TEMPERATURE=0.7
 
 # API Keys
-DEEPSEEK_API_KEY=sk-your-deepseek-key
-OPENAI_API_KEY=sk-your-openai-key  # Required for vector text embeddings
+OPENAI_API_KEY=sk-tu-openai-key
+# DEEPSEEK_API_KEY=sk-tu-deepseek-key
+# QWEN_API_KEY=sk-tu-qwen-key
 
+# Embeddings y Límites
 EMBEDDING_MODEL=text-embedding-3-small
 MAX_UPLOAD_MB=50
 MAX_INGESTION_SECONDS=50
 ```
 
-### 3. Database Migration Setup
+### 3. Migraciones de Base de Datos
 
-Run the SQL migration scripts in your **Supabase Dashboard -> SQL Editor** (in order):
+Aplica los scripts SQL en el **Editor SQL de Supabase** en estricto orden secuencial:
 
-1. `supabase/migrations/0001_init_extensions.sql` (Enables `pgvector`)
+1. `supabase/migrations/0001_init_extensions.sql` (Habilita la extensión `vector`)
 2. `supabase/migrations/0002_documents.sql`
 3. `supabase/migrations/0003_document_chunks.sql`
 4. `supabase/migrations/0004_quiz_questions_and_statements.sql`
 5. `supabase/migrations/0005_sessions_and_answers.sql`
-6. `supabase/migrations/0006_match_document_chunks.sql`
-7. `supabase/migrations/0007_auth_user_links.sql`
+6. `supabase/migrations/0006_match_document_chunks.sql` (Función RPC para búsqueda por similitud)
+7. `supabase/migrations/0007_auth_user_links.sql` (Políticas RLS y vinculación de usuarios)
 8. `supabase/migrations/0008_dashboard_indexes.sql`
 9. `supabase/migrations/0009_quiz_generation_idempotency.sql`
+10. `supabase/migrations/0010_repetition_schedule.sql` (Tabla de repetición espaciada SM-2)
+11. `supabase/migrations/0011_session_question_target.sql`
+12. `supabase/migrations/0012_session_quiz_language.sql`
+13. `supabase/migrations/0013_production_hardening.sql` (Índices HNSW, chunks reanudables y rate limiting distribuido)
 
-For confirmation and password reset emails, set the Supabase Auth Site URL to your app origin and allow redirects to `http://localhost:3000/auth/callback*` (and the equivalent URL on your deployed domain). The same Supabase anon key should be used for `SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_ANON`; the service role key must remain server only.
-
-*Alternatively, if using local Supabase CLI:*
-```bash
-npx supabase start
-```
-
-### 4. Run Development Server
+### 4. Ejecución en Desarrollo
 
 ```bash
+npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ---
 
-## 🧪 Running Tests & Quality Checks
+## 🧪 Pruebas y Validación de Calidad
+
+El proyecto cuenta con una cobertura integral de pruebas automatizadas:
 
 ```bash
-# Typecheck TypeScript
+# Verificación de tipos TypeScript
 npm run typecheck
 
-# Run Unit & Integration Tests (Vitest)
-npm run test:unit
-npm run test:integration
+# Análisis estático de código (Linter)
+npm run lint
 
-# Run E2E Tests (Playwright)
+# Escaneo de seguridad contra fugas de claves y secretos
+npm run test:security
+
+# Pruebas Unitarias e Integración (Vitest - 248 pruebas)
+npm run test:unit
+
+# Pruebas End-to-End (Playwright)
 npm run test:e2e
 
-# Run Complete Release Validation Suite
-npm run validate:release
-
-# Run Production Deployment Preflight Check
+# Validación de despliegue en producción (Preflight)
 npm run preflight:deploy
 
-# Run Live Production Smoke Test
-TARGET_URL=https://your-domain.vercel.app npm run test:smoke:prod
+# Prueba de humo sobre el dominio en vivo
+TARGET_URL=https://tu-app.vercel.app npm run test:smoke:prod
 ```
-
-For complete step-by-step production setup instructions, see the [Production Deployment Guide](../docs/deployment-guide.md).
 
 ---
 
-## 📁 Project Structure
+## 📁 Estructura del Código
 
 ```
 socratic-cross-examiner/
+├── .github/workflows/      # Flujo de Integración Continua (CI en GitHub Actions)
 ├── src/
-│   ├── app/                # Next.js App Router (Upload, Quiz, Results, API)
-│   ├── components/         # React UI Components & Evidence Panel
+│   ├── app/                # Next.js App Router (Páginas, Rutas de API, Auth, Dashboard)
+│   ├── components/         # Componentes React (Quiz, Dashboard, UI, Temas, Navegación)
+│   ├── hooks/              # Custom Hooks para gestión de estado y sesión
 │   ├── lib/
-│   │   ├── ai/             # Multi-provider LLM adapters (DeepSeek, OpenAI, Qwen)
-│   │   ├── db/             # Supabase database client & pgvector queries
-│   │   ├── pdf/            # Semantic chunking & PDF parsing engine
-│   │   └── rag/            # Retrieval practice evidence selection
-│   ├── schemas/            # Zod validation schemas (DB, Quiz, Ingestion)
-│   └── types/              # TypeScript interfaces
+│   │   ├── ai/             # Adaptadores multi-proveedor LLM y conmutación por error
+│   │   ├── auth/           # Utilidades de autenticación y comprobaciones de propiedad
+│   │   ├── confidence/     # Cálculos del Trazador de Confianza y detección de brechas
+│   │   ├── db/             # Clientes Supabase, queries relacionales y operaciones pgvector
+│   │   ├── i18n/           # Diccionarios bilingües (Español / Inglés) y contexto
+│   │   ├── pdf/            # Parser de PDF, sanitización de caracteres y chunking
+│   │   ├── repetition/     # Motor de repetición espaciada SuperMemo (SM-2)
+│   │   └── security/       # Rate limiting distribuido en PostgreSQL
+│   ├── schemas/            # Esquemas de validación Zod (Base de datos y API)
+│   └── types/              # Definiciones de tipos TypeScript
 ├── supabase/
-│   └── migrations/         # PostgreSQL + pgvector schema migrations
-└── tests/                  # Vitest unit/integration & Playwright E2E tests
+│   └── migrations/         # 13 migraciones versionadas en PostgreSQL + pgvector
+├── scripts/                # Scripts de auditoría de secretos, benchmark y preflight
+└── tests/                  # Suites de pruebas (Unitarias, Integración y E2E)
 ```
-
----

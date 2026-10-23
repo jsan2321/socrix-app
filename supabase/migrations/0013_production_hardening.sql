@@ -56,6 +56,10 @@ CREATE INDEX IF NOT EXISTS idx_rate_limit_logs_key_time
 ALTER TABLE public.rate_limit_logs ENABLE ROW LEVEL SECURITY;
 -- No public policies: only accessible via service_role client / SECURITY DEFINER RPC
 
+GRANT ALL ON TABLE public.rate_limit_logs TO service_role;
+GRANT ALL ON SEQUENCE public.rate_limit_logs_id_seq TO service_role;
+GRANT ALL ON TABLE public.repetition_schedule TO service_role, authenticated;
+
 CREATE OR REPLACE FUNCTION public.check_rate_limit(
   p_key text,
   p_limit integer,
