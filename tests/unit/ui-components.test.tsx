@@ -130,6 +130,23 @@ describe("Frontend UI Components Unit Suite (Phase 9)", () => {
 
       expect(mockOnToggle).toHaveBeenCalledWith("s-1");
     });
+
+    it("invokes onToggle exactly once when checkbox-mode statement text is clicked", () => {
+      render(
+        <StatementCard
+          statementId="s-2"
+          text="A false statement"
+          mode="identify_both_lies"
+          selected={false}
+          onToggle={mockOnToggle}
+        />
+      );
+
+      fireEvent.click(screen.getByText("A false statement"));
+
+      expect(mockOnToggle).toHaveBeenCalledTimes(1);
+      expect(mockOnToggle).toHaveBeenCalledWith("s-2");
+    });
   });
 
   describe("ConfidenceTracerChart Component", () => {

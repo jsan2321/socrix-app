@@ -1,0 +1,137 @@
+{
+  "domain": "stem",
+  "subject": "physics",
+  "title": "Thermodynamics and Statistical Mechanics",
+  "concepts": [
+    {
+      "id": "phys-01",
+      "concept": "Zeroth Law and Thermal Equilibrium",
+      "difficulty": "foundational",
+      "sourceExcerpt": "The Zeroth Law of Thermodynamics states that if two systems are each in thermal equilibrium with a third system, they are also in thermal equilibrium with each other. This transitive property provides the fundamental basis for defining temperature and using thermometers as standardized measurement tools.",
+      "trueClaim": "The Zeroth Law establishes the transitivity of thermal equilibrium, providing the empirical foundation for temperature measurement.",
+      "falseClaims": [
+        "The Zeroth Law asserts that absolute zero temperature cannot be achieved in a finite number of thermodynamic steps.",
+        "Thermal equilibrium requires two bodies to possess identical masses and internal energies."
+      ],
+      "groundingRationale": "Text affirms the Zeroth Law states transitivity of thermal equilibrium between systems, establishing the basis for temperature.",
+      "provenance": { "page": 1, "paragraph": 1, "heading": "1. Thermal Equilibrium" }
+    },
+    {
+      "id": "phys-02",
+      "concept": "First Law and Internal Energy Conservation",
+      "difficulty": "foundational",
+      "sourceExcerpt": "The First Law of Thermodynamics expresses the conservation of energy: the change in internal energy of a closed system is equal to the heat added to the system minus the thermodynamic work done by the system on its surroundings (dU = dQ - dW). Internal energy is a state function independent of path.",
+      "trueClaim": "The change in internal energy of a closed system equals heat added minus work done, representing a path-independent state function.",
+      "falseClaims": [
+        "Work and heat are state functions whose values depend solely on initial and final coordinates.",
+        "The First Law allows a closed system to produce infinite mechanical work without consuming energy."
+      ],
+      "groundingRationale": "Text presents dU = dQ - dW and confirms internal energy is a state function representing energy conservation.",
+      "provenance": { "page": 2, "paragraph": 2, "heading": "2. The First Law" }
+    },
+    {
+      "id": "phys-03",
+      "concept": "Second Law and Entropy Production",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The Second Law dictates that the total entropy of an isolated system never decreases over time; it remains constant for ideal reversible processes and strictly increases for irreversible spontaneous processes. Heat cannot spontaneously flow from a colder reservoir to a hotter reservoir without external work.",
+      "trueClaim": "Total entropy of an isolated system increases in irreversible processes and remains constant in reversible processes, never decreasing.",
+      "falseClaims": [
+        "Isolated systems naturally evolve toward lower entropy states without external intervention.",
+        "Heat flows spontaneously from colder to hotter bodies during spontaneous adiabatic expansion."
+      ],
+      "groundingRationale": "Text defines Second Law: entropy of isolated system never decreases, increasing during irreversible processes.",
+      "provenance": { "page": 3, "paragraph": 1, "heading": "3. Entropy and Reversibility" }
+    },
+    {
+      "id": "phys-04",
+      "concept": "Carnot Engine Maximum Efficiency",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "Carnot's theorem proves that no heat engine operating between two thermal reservoirs can be more efficient than a reversible Carnot engine operating between the same reservoirs. The Carnot efficiency depends solely on absolute temperatures: eta = 1 - (Tc / Th).",
+      "trueClaim": "Carnot engine efficiency is the maximum theoretical efficiency between two reservoirs, determined strictly by eta = 1 - (Tc / Th).",
+      "falseClaims": [
+        "A real heat engine using organic refrigerants can exceed Carnot efficiency through turbulent mixing.",
+        "Carnot efficiency depends primarily on the chemical composition of the working gas rather than reservoir temperatures."
+      ],
+      "groundingRationale": "Text states no engine between two reservoirs is more efficient than a Carnot engine, with efficiency eta = 1 - (Tc/Th).",
+      "provenance": { "page": 4, "paragraph": 3, "heading": "4. The Carnot Cycle" }
+    },
+    {
+      "id": "phys-05",
+      "concept": "Third Law and Absolute Zero",
+      "difficulty": "advanced",
+      "sourceExcerpt": "The Third Law of Thermodynamics states that the entropy of a pure crystalline substance approaches zero as absolute temperature approaches zero Kelvin. Consequently, it is impossible for any physical process to reduce a system's temperature to absolute zero in a finite sequence of operations.",
+      "trueClaim": "The entropy of a perfect crystal approaches zero at absolute zero, making 0 Kelvin unattainable in a finite number of operational steps.",
+      "falseClaims": [
+        "At absolute zero, molecular kinetic energy increases exponentially due to zero-point fluctuation.",
+        "All amorphous glasses possess exactly zero entropy at 100 Kelvin."
+      ],
+      "groundingRationale": "Text indicates entropy of a pure crystal approaches zero at 0 K, and absolute zero cannot be reached in finite steps.",
+      "provenance": { "page": 5, "paragraph": 2, "heading": "5. Absolute Zero and Residual Entropy" }
+    },
+    {
+      "id": "phys-06",
+      "concept": "Adiabatic Expansion vs Isothermal Expansion",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "In an isothermal expansion of an ideal gas, temperature remains constant because heat enters the system at the exact rate work is performed. In an adiabatic expansion, no heat enters or leaves the system (Q = 0); the work performed comes entirely from internal energy, causing temperature to drop.",
+      "trueClaim": "In adiabatic expansion without heat exchange, work is powered by internal energy, causing gas temperature to decrease.",
+      "falseClaims": [
+        "In isothermal expansion, the internal energy of an ideal gas drops to zero as volume increases.",
+        "An adiabatic process requires instantaneous infinite heat conduction across system boundaries."
+      ],
+      "groundingRationale": "Text contrasts isothermal temperature constancy with adiabatic expansion where Q=0 and internal energy loss lowers temperature.",
+      "provenance": { "page": 6, "paragraph": 1, "heading": "6. Ideal Gas Transformations" }
+    },
+    {
+      "id": "phys-07",
+      "concept": "Gibbs Free Energy and Spontaneity",
+      "difficulty": "advanced",
+      "sourceExcerpt": "For processes occurring at constant temperature and pressure, Gibbs free energy (G = H - TS) dictates thermodynamic spontaneity. A process is spontaneous if and only if delta G is negative. When delta G is zero, the system has attained thermodynamic equilibrium.",
+      "trueClaim": "At constant temperature and pressure, a negative delta G defines a spontaneous process, and delta G = 0 indicates equilibrium.",
+      "falseClaims": [
+        "Processes with positive delta G occur spontaneously at constant temperature and pressure without external energy input.",
+        "Gibbs free energy increases during every spontaneous phase transition."
+      ],
+      "groundingRationale": "Text explicitly states delta G negative indicates spontaneity at constant T and P, while delta G = 0 denotes equilibrium.",
+      "provenance": { "page": 7, "paragraph": 4, "heading": "7. Thermodynamic Potentials" }
+    },
+    {
+      "id": "phys-08",
+      "concept": "Microstates and Boltzmann Entropy",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Statistical mechanics defines entropy as S = k_B * ln(Omega), where k_B is the Boltzmann constant and Omega is the multiplicity or number of accessible microstates corresponding to a given macrostate. Systems naturally evolve toward macrostates with maximal multiplicity.",
+      "trueClaim": "Boltzmann entropy connects thermodynamic entropy to the logarithm of accessible microscopic states via S = k_B * ln(Omega).",
+      "falseClaims": [
+        "Multiplicity decreases continuously as a gas expands freely into an evacuated container.",
+        "Boltzmann entropy is defined exclusively for non-equilibrium quantum black holes."
+      ],
+      "groundingRationale": "Text presents S = k_B * ln(Omega) relating entropy to the number of microstates corresponding to a macrostate.",
+      "provenance": { "page": 8, "paragraph": 2, "heading": "8. Statistical Interpretation" }
+    },
+    {
+      "id": "phys-09",
+      "concept": "Enthalpy and Constant Pressure Heat Flow",
+      "difficulty": "foundational",
+      "sourceExcerpt": "Enthalpy is defined as H = U + PV. For a closed system undergoing an isobaric (constant pressure) process with work limited to expansion work, the change in enthalpy is equal to the heat transferred to or from the system (dH = dQ_p).",
+      "trueClaim": "For a constant-pressure process with only expansion work, the change in enthalpy directly equals the heat exchanged.",
+      "falseClaims": [
+        "Enthalpy changes are defined only for processes occurring at constant volume inside rigid calorimeters.",
+        "The pressure-volume product PV in enthalpy represents irreversible friction losses."
+      ],
+      "groundingRationale": "Text shows H = U + PV and confirms dH equals heat transferred dQ_p during constant-pressure processes.",
+      "provenance": { "page": 9, "paragraph": 1, "heading": "9. Enthalpy and Calorimetry" }
+    },
+    {
+      "id": "phys-10",
+      "concept": "Clausius-Clapeyron Phase Coexistence",
+      "difficulty": "advanced",
+      "sourceExcerpt": "The Clausius-Clapeyron equation relates the slope of the coexistence curve in a P-T phase diagram to the latent heat of transition and the change in specific volume between the two phases: dP/dT = L / (T * delta V).",
+      "trueClaim": "The Clausius-Clapeyron relation determines phase boundary slopes using latent heat and volume change: dP/dT = L / (T * delta V).",
+      "falseClaims": [
+        "Phase boundaries in P-T space are independent of volume change between liquid and vapor phases.",
+        "Sublimation curves always have negative slope for all elemental substances."
+      ],
+      "groundingRationale": "Text details dP/dT = L / (T * delta V) characterizing phase coexistence boundaries in terms of latent heat and volume change.",
+      "provenance": { "page": 10, "paragraph": 3, "heading": "10. Phase Transitions" }
+    }
+  ]
+}

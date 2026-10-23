@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { DevilsAdvocateSchema } from "@/schemas/quiz";
+import { DevilsAdvocateSchema, QuizStatementSchema } from "@/schemas/quiz";
 
 describe("DevilsAdvocateSchema Zod Invariants", () => {
   const validPayload = {
@@ -62,7 +62,7 @@ describe("DevilsAdvocateSchema Zod Invariants", () => {
       ...validPayload,
       statements: [
         { ...validPayload.statements[0] },
-        { ...validPayload.statements[0], isTrue: false }, // Duplicate text
+        { ...validPayload.statements[0], isTrue: false },
         { ...validPayload.statements[2] },
       ],
     };
@@ -71,5 +71,74 @@ describe("DevilsAdvocateSchema Zod Invariants", () => {
     if (!parseResult.success) {
       expect(parseResult.error.issues[0].message).toContain("Statements must be distinct");
     }
+  });
+
+  it("rejects payload with only 2 statements (length < 3)", () => {
+    const payload = {
+      ...validPayload,
+      statements: validPayload.statements.slice(0, 2),
+    };
+    const parseResult = DevilsAdvocateSchema.safeParse(payload);
+    expect(parseResult.success).toBe(false);
+    if (!parseResult.success) {
+      expect(parseResult.error.issues.some((i) => i.message.includes("Must contain exactly 3 statements"))).toBe(true);
+    }
+  });
+
+  it("rejects payload with 4 statements (length > 3)", () => {
+    const payload = {
+      ...validPayload,
+      statements: [
+        ...validPayload.statements,
+        {
+          text: "An additional extraneous statement that exceeds the strict length invariant.",
+          isTrue: false,
+          groundingRationale: "Fourth statement causing validation error.",
+        },
+      ],
+    };
+    const parseResult = DevilsAdvocateSchema.safeParse(payload);
+    expect(parseResult.success).toBe(false);
+    if (!parseResult.success) {
+      expect(parseResult.error.issues.some((i) => i.message.includes("Must contain exactly 3 statements"))).toBe(true);
+    }
+  });
+
+  it("rejects invalid difficulty enum values", () => {
+    const payload = {
+      ...validPayload,
+      difficulty: "expert",
+    };
+    const parseResult = DevilsAdvocateSchema.safeParse(payload);
+    expect(parseResult.success).toBe(false);
+  });
+
+  it("rejects concept title that is too short (< 3 characters)", () => {
+    const payload = {
+      ...validPayload,
+      concept: "AB",
+    };
+    const parseResult = DevilsAdvocateSchema.safeParse(payload);
+    expect(parseResult.success).toBe(false);
+  });
+
+  it("rejects statement text shorter than 20 characters", () => {
+    const invalidStatement = {
+      text: "Too short.",
+      isTrue: true,
+      groundingRationale: "Valid rationale for short statement.",
+    };
+    const parseResult = QuizStatementSchema.safeParse(invalidStatement);
+    expect(parseResult.success).toBe(false);
+  });
+
+  it("rejects groundingRationale shorter than 10 characters", () => {
+    const invalidStatement = {
+      text: "This is a statement of sufficient length to pass the text length check.",
+      isTrue: true,
+      groundingRationale: "Short",
+    };
+    const parseResult = QuizStatementSchema.safeParse(invalidStatement);
+    expect(parseResult.success).toBe(false);
   });
 });

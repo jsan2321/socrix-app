@@ -1,0 +1,137 @@
+{
+  "domain": "stem",
+  "subject": "computer_science",
+  "title": "Operating Systems and Memory Architecture",
+  "concepts": [
+    {
+      "id": "cs-01",
+      "concept": "Virtual Memory and Paging",
+      "difficulty": "foundational",
+      "sourceExcerpt": "Paging divides a process's virtual address space into fixed-size blocks called pages, while physical memory is divided into equally sized blocks called frames. The memory management unit translates virtual page numbers to physical frame numbers using a per-process page table.",
+      "trueClaim": "The MMU translates virtual page numbers into physical frame numbers using entries in the active process page table.",
+      "falseClaims": [
+        "Paging divides physical memory into dynamically variable partitions determined by thread priorities.",
+        "Virtual page numbers are hardwired directly to disk sectors without translation tables."
+      ],
+      "groundingRationale": "Text confirms memory management unit translates virtual page numbers to physical frame numbers via per-process page table.",
+      "provenance": { "page": 1, "paragraph": 1, "heading": "1. Paging Foundations" }
+    },
+    {
+      "id": "cs-02",
+      "concept": "Translation Lookaside Buffer (TLB)",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The translation lookaside buffer is a small, highly associative hardware cache located close to the CPU core. A TLB hit enables virtual-to-physical address translation in a single cycle without querying the in-memory multi-level page table.",
+      "trueClaim": "A TLB hit provides single-cycle address translation by caching recent page table entries directly on chip.",
+      "falseClaims": [
+        "A TLB hit forces the CPU to initiate a DMA transfer from secondary disk storage.",
+        "The TLB stores full disk image sectors rather than virtual page translations."
+      ],
+      "groundingRationale": "Text affirms the TLB is a fast hardware cache where hits allow single-cycle translation without querying page tables.",
+      "provenance": { "page": 2, "paragraph": 3, "heading": "2. Address Translation Acceleration" }
+    },
+    {
+      "id": "cs-03",
+      "concept": "Page Fault Handling Mechanism",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "When a thread references a page whose present bit in the page table is zero, the MMU triggers a page fault exception. The operating system kernel traps the fault, suspends the executing thread, retrieves the missing page from disk swap space into an available physical frame, updates the page table, and restarts the instruction.",
+      "trueClaim": "A page fault triggers an OS kernel trap that retrieves the missing page from disk swap and updates the page table before resuming execution.",
+      "falseClaims": [
+        "A page fault indicates unrecoverable hardware failure and immediately terminates the entire machine.",
+        "Page faults are resolved directly by user-space runtime libraries without kernel privilege."
+      ],
+      "groundingRationale": "Text outlines how OS kernel traps the fault, fetches missing page from swap space into a frame, updates table, and restarts instruction.",
+      "provenance": { "page": 3, "paragraph": 2, "heading": "3. Demand Paging and Faults" }
+    },
+    {
+      "id": "cs-04",
+      "concept": "Least Recently Used (LRU) Page Replacement",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The LRU page replacement algorithm selects the frame that has remained unreferenced for the longest duration. While theoretically optimal among online algorithms, pure LRU requires updating a timestamp or list position on every memory access, imposing excessive hardware overhead.",
+      "trueClaim": "LRU selects for eviction the frame unreferenced for the longest duration, but tracking access timestamps on every reference incurs high overhead.",
+      "falseClaims": [
+        "LRU evicts the page with the highest frequency count of write operations.",
+        "True LRU requires zero hardware support and is implemented via a simple FIFO ring buffer."
+      ],
+      "groundingRationale": "Text explains LRU evicts the frame unreferenced the longest, and notes timestamp tracking on every access incurs severe overhead.",
+      "provenance": { "page": 4, "paragraph": 1, "heading": "4. Page Eviction Algorithms" }
+    },
+    {
+      "id": "cs-05",
+      "concept": "Coffman Deadlock Conditions",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Deadlock in concurrent systems can occur if and only if four conditions hold simultaneously: mutual exclusion, hold and wait, no preemption, and circular wait. Eliminating any one of these four conditions guarantees the prevention of deadlock.",
+      "trueClaim": "Deadlock requires mutual exclusion, hold and wait, no preemption, and circular wait to hold concurrently; violating any one prevents it.",
+      "falseClaims": [
+        "Deadlock occurs whenever more than two threads read the same shared immutable memory location.",
+        "A system deadlocks if and only if CPU utilization drops below ten percent."
+      ],
+      "groundingRationale": "Text explicitly lists the four simultaneous Coffman conditions and notes preventing any one guarantees deadlock freedom.",
+      "provenance": { "page": 5, "paragraph": 4, "heading": "5. Concurrency and Synchronization" }
+    },
+    {
+      "id": "cs-06",
+      "concept": "Mutex vs Counting Semaphore",
+      "difficulty": "foundational",
+      "sourceExcerpt": "A mutex is a locking mechanism with ownership semantics: only the thread that acquired the lock may release it. A counting semaphore maintains an integer counter representing available resource units, allowing any thread to signal and increment the count.",
+      "trueClaim": "A mutex enforces ownership such that only the acquiring thread can release it, whereas semaphores do not restrict which thread may signal.",
+      "falseClaims": [
+        "Counting semaphores are restricted to binary values 0 and 1 and cannot manage multiple resources.",
+        "A mutex permits arbitrary threads to unlock resources acquired by others."
+      ],
+      "groundingRationale": "Text specifies mutex has ownership where only acquiring thread releases it, while counting semaphores track resource counts.",
+      "provenance": { "page": 6, "paragraph": 2, "heading": "6. Synchronization Primitives" }
+    },
+    {
+      "id": "cs-07",
+      "concept": "User Space vs Kernel Space Transitions",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "CPUs provide privilege rings to isolate user applications (Ring 3) from kernel operations (Ring 0). When a process issues a system call, a software interrupt or specialized CPU instruction transitions the CPU into privileged mode, switching to the kernel stack.",
+      "trueClaim": "System calls transition the CPU from unprivileged Ring 3 to privileged Ring 0, executing kernel code on a dedicated kernel stack.",
+      "falseClaims": [
+        "User applications execute in Ring 0 and possess direct hardware access to control registers.",
+        "System calls execute on the user thread stack without changing processor privilege levels."
+      ],
+      "groundingRationale": "Text describes privilege ring transition from Ring 3 to Ring 0 via system call, switching to the kernel stack.",
+      "provenance": { "page": 7, "paragraph": 1, "heading": "7. Processor Modes and System Calls" }
+    },
+    {
+      "id": "cs-08",
+      "concept": "Preemptive vs Non-Preemptive Scheduling",
+      "difficulty": "foundational",
+      "sourceExcerpt": "In preemptive scheduling, the OS timer interrupt periodically reclaims the CPU from a running process to allocate it to another thread according to priority or time slices. In non-preemptive scheduling, a process retains CPU control until it voluntarily yields or blocks on I/O.",
+      "trueClaim": "Preemptive scheduling uses timer interrupts to involuntarily suspend running tasks, whereas non-preemptive tasks run until yielding or blocking.",
+      "falseClaims": [
+        "Non-preemptive scheduling allows the OS to forcefully interrupt any executing compute-bound task at random intervals.",
+        "Preemptive scheduling prevents any process from performing I/O operations."
+      ],
+      "groundingRationale": "Text contrasts timer interrupt preemption with voluntary yielding in non-preemptive scheduling.",
+      "provenance": { "page": 8, "paragraph": 3, "heading": "8. CPU Scheduling" }
+    },
+    {
+      "id": "cs-09",
+      "concept": "Thrashing and Working Set Model",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Thrashing occurs when the collective working sets of active processes exceed total physical RAM, forcing the operating system to spend virtually all CPU cycles swapping pages in and out of secondary storage rather than executing application code.",
+      "trueClaim": "Thrashing happens when aggregate working set sizes exceed physical memory, causing the system to spend primary CPU cycles servicing page swaps.",
+      "falseClaims": [
+        "Thrashing refers to excessive CPU fan vibration during heavy matrix multiplications.",
+        "Thrashing is resolved by immediately deleting all resident pages from RAM without writeback."
+      ],
+      "groundingRationale": "Text defines thrashing as state where active working sets exceed physical memory, dominating CPU time with page swapping.",
+      "provenance": { "page": 9, "paragraph": 2, "heading": "9. Memory Saturation" }
+    },
+    {
+      "id": "cs-10",
+      "concept": "Dirty Bit and Page Writeback",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The hardware MMU sets the dirty bit in a page table entry whenever a write operation occurs on that page. During page eviction, if the dirty bit is clear, the OS simply reclaims the frame without disk I/O; if set, the modified contents must first be written back to swap.",
+      "trueClaim": "When evicting an unmodified page with an unset dirty bit, the OS can discard the frame immediately without disk writeback.",
+      "falseClaims": [
+        "A set dirty bit instructs the operating system to zero out all memory in the frame without saving changes.",
+        "The dirty bit is toggled exclusively during read-only instructions."
+      ],
+      "groundingRationale": "Text documents that if dirty bit is clear, frame is reclaimed without disk I/O; if set, contents must be written to swap.",
+      "provenance": { "page": 10, "paragraph": 1, "heading": "10. Page Frame Reclamation" }
+    }
+  ]
+}

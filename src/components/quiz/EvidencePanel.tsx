@@ -2,6 +2,7 @@ import React from "react";
 import type { EvidenceResult } from "@/lib/rag/evidence";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/lib/i18n/context";
 
 export interface EvidencePanelProps {
   evidence: EvidenceResult;
@@ -13,11 +14,16 @@ export interface EvidencePanelProps {
 /**
  * Format page citation text.
  */
-export function formatPageCitation(pageStart: number, pageEnd: number): string {
+export function formatPageCitation(
+  pageStart: number,
+  pageEnd: number,
+  singleLabel = "Page",
+  multiLabel = "Pages"
+): string {
   if (pageStart === pageEnd) {
-    return `Page ${pageStart}`;
+    return `${singleLabel} ${pageStart}`;
   }
-  return `Pages ${pageStart}–${pageEnd}`;
+  return `${multiLabel} ${pageStart}–${pageEnd}`;
 }
 
 /**
@@ -61,7 +67,7 @@ export function highlightSourceText(fullText: string, target?: string): React.Re
 }
 
 /**
- * EvidencePanel Component (FR-RAG-4, FR-RAG-5).
+ * Evidence panel for source excerpts and optional guidance.
  * Renders source evidence passage as the primary element in DOM order.
  * Any optional AI orientation hint is rendered strictly below the source excerpt.
  */
@@ -71,7 +77,8 @@ export function EvidencePanel({
   targetSentence,
   className = "",
 }: EvidencePanelProps) {
-  const pageText = formatPageCitation(evidence.page_start, evidence.page_end);
+  const { dict } = useI18n();
+  const pageText = formatPageCitation(evidence.page_start, evidence.page_end, dict.evidence.page, dict.evidence.pages);
   const paraText = formatParagraphCitation(evidence.paragraph_start, evidence.paragraph_end);
   const similarityPct = Math.round(evidence.similarity_score * 100);
 
@@ -80,7 +87,7 @@ export function EvidencePanel({
       className={`space-y-4 data-evidence-panel ${className}`}
       data-testid="evidence-panel-container"
     >
-      {/* 1. PRIMARY DOM ELEMENT: Source Document Evidence (FR-RAG-5) */}
+      {/* Primary source document evidence. */}
       <Card
         className="border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-800/60 shadow-sm"
         data-testid="primary-source-evidence-card"
@@ -101,40 +108,40 @@ export function EvidencePanel({
               )}
 
               {evidence.is_origin_chunk && (
-                <Badge variant="default" className="text-xs bg-emerald-600 hover:bg-emerald-700">
-                  Origin Source
+                <Badge variant="default" className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white">
+                  {dict.evidence.originChunkBadge}
                 </Badge>
               )}
             </div>
 
             <Badge variant="outline" className="text-xs text-muted-foreground">
-              {similarityPct}% Match
+              {similarityPct}% {dict.evidence.match}
             </Badge>
           </div>
 
           <CardTitle className="text-sm font-semibold text-amber-900 dark:text-amber-300 mt-2">
-            Source Passage Evidence
+            {dict.evidence.passageTitle}
           </CardTitle>
         </CardHeader>
 
         <CardContent>
-          <blockquote className="border-l-4 border-amber-500 pl-4 py-1 my-1 text-sm leading-relaxed text-foreground italic">
+          <blockquote className="border-l-4 border-amber-500 pl-4 py-2 my-2 text-sm font-serif leading-relaxed text-foreground italic bg-amber-500/5 rounded-r-md">
             &ldquo;{highlightSourceText(evidence.text, targetSentence)}&rdquo;
           </blockquote>
 
           <div className="mt-3 text-xs text-muted-foreground flex items-center justify-between">
             <span>
-              Sentence coords: {evidence.sentence_start}–{evidence.sentence_end}
+              {dict.evidence.sentenceCoords}: {evidence.sentence_start}–{evidence.sentence_end}
             </span>
-            <span>Chunk ID: {evidence.chunk_id.slice(0, 8)}...</span>
+            <span>{dict.evidence.chunkId}: {evidence.chunk_id.slice(0, 8)}...</span>
           </div>
         </CardContent>
       </Card>
 
-      {/* 2. SECONDARY DOM ELEMENT: Optional AI Orientation Hint (FR-RAG-5) */}
+      {/* Optional orientation hint. */}
       {aiHint && (
         <Card
-          className="border-slate-200 bg-slate-50 dark:bg-slate-900/40 dark:border-slate-800"
+          className="border-border bg-muted/30 shadow-none"
           data-testid="secondary-ai-hint-card"
           role="region"
           aria-label="AI Orientation Hint"
@@ -142,10 +149,10 @@ export function EvidencePanel({
           <CardHeader className="py-2.5">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                <span>🤖</span> AI Orientation Hint
+                <span>🤖</span> {dict.evidence.aiOrientationHint}
               </span>
               <Badge variant="outline" className="text-[10px] py-0 h-4">
-                Secondary
+                {dict.evidence.secondary}
               </Badge>
             </div>
           </CardHeader>

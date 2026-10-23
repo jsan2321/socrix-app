@@ -28,7 +28,7 @@ const ABSOLUTE_MIN_TOKENS = 100;
 const ABSOLUTE_MAX_TOKENS = 600;
 
 /**
- * Semantic chunking algorithm matching SRS §4.1 FR-ING-5 & semantic-chunking skill.
+ * Semantic chunking algorithm with coordinate tracking.
  */
 export function chunkParsedDocument(
   parsedDoc: ParsedDocument,

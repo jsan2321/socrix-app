@@ -1,0 +1,137 @@
+{
+  "domain": "humanities",
+  "subject": "philosophy",
+  "title": "Epistemology and Socratic Dialectic",
+  "concepts": [
+    {
+      "id": "phil-01",
+      "concept": "Justified True Belief (JTB) Tripartite Analysis",
+      "difficulty": "foundational",
+      "sourceExcerpt": "The classical tripartite analysis of knowledge, tracing back to Plato's Theaetetus, defines propositional knowledge as justified true belief. Under this account, subject S knows proposition P if and only if P is true, S believes that P, and S is epistemically justified in believing that P.",
+      "trueClaim": "The classical JTB account defines knowledge as a proposition being true, believed by the subject, and epistemically justified.",
+      "falseClaims": [
+        "The JTB analysis considers justification completely irrelevant as long as a belief happens to be true by accident.",
+        "Under JTB, a false proposition can constitute genuine knowledge if firmly believed with high confidence."
+      ],
+      "groundingRationale": "Text states tripartite analysis defines knowledge as justified true belief: P is true, S believes P, and S is justified in believing P.",
+      "provenance": { "page": 1, "paragraph": 1, "heading": "1. The Tripartite Theory of Knowledge" }
+    },
+    {
+      "id": "phil-02",
+      "concept": "The Gettier Problem Counterexamples",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "In 1963, Edmund Gettier published two famous counterexamples demonstrating that justified true belief is not sufficient for knowledge. In cases involving epistemic luck or false lemmas, an agent can hold a justified belief that happens to be true purely by coincidence, failing our intuitive concept of knowledge.",
+      "trueClaim": "Gettier demonstrated that justified true beliefs do not guarantee knowledge when the truth of the belief is connected to justification only by luck.",
+      "falseClaims": [
+        "Gettier proved that nobody can ever possess true beliefs about mathematical axioms.",
+        "The Gettier problem showed that belief is an unnecessary component of propositional knowledge."
+      ],
+      "groundingRationale": "Text documents Gettier showing JTB is insufficient when justified belief happens to be true by luck or false lemma.",
+      "provenance": { "page": 2, "paragraph": 3, "heading": "2. The Gettier Counterexamples" }
+    },
+    {
+      "id": "phil-03",
+      "concept": "Socratic Method and Elenchus",
+      "difficulty": "foundational",
+      "sourceExcerpt": "The Socratic elenchus is a dialectical method of cross-examination in which Socrates tests an interlocutor's proposed definition by eliciting auxiliary beliefs that logically contradict the original thesis. The goal is to induce aporia, exposing implicit contradictions and clearing away false presumptions of knowledge.",
+      "trueClaim": "The Socratic elenchus cross-examines interlocutors to uncover latent contradictions in their beliefs, leading to aporia.",
+      "falseClaims": [
+        "The Socratic method consists of lengthy dogmatic lectures where Socrates delivers authoritative doctrinal truths.",
+        "Elenchus requires interlocutors to accept claims without offering any definitions or answers."
+      ],
+      "groundingRationale": "Text defines elenchus as dialectical cross-examination eliciting contradictory beliefs to induce aporia and reveal ignorance.",
+      "provenance": { "page": 3, "paragraph": 2, "heading": "3. The Socratic Dialectic" }
+    },
+    {
+      "id": "phil-04",
+      "concept": "Cartesian Methodological Doubt",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "In the Meditations, René Descartes employed radical methodological doubt, suspending assent from any belief that admitted even the slightest possibility of uncertainty. By introducing skeptical hypotheses like the dream argument and the deceiving demon, Descartes sought an indubitable foundation for knowledge.",
+      "trueClaim": "Descartes used radical methodological doubt to withhold assent from any belief capable of uncertainty, aiming for an indubitable foundation.",
+      "falseClaims": [
+        "Descartes accepted sensory perceptions as infallible, never questioning visual illusions.",
+        "Methodological doubt was intended to prove that all human science is permanently impossible."
+      ],
+      "groundingRationale": "Text outlines Cartesian doubt suspending assent from uncertain beliefs via dream and demon hypotheses to find secure foundations.",
+      "provenance": { "page": 4, "paragraph": 1, "heading": "4. Cartesian Foundationalism" }
+    },
+    {
+      "id": "phil-05",
+      "concept": "The Cogito Argument",
+      "difficulty": "foundational",
+      "sourceExcerpt": "Descartes arrived at his foundational truth: 'Cogito, ergo sum' (I think, therefore I am). Even if a malicious demon actively deceives him in every calculation, the very act of doubting or being deceived necessitates the existence of the thinking subject at the moment of thought.",
+      "trueClaim": "The Cogito establishes that the very act of thinking or doubting necessarily confirms the existence of the conscious subject.",
+      "falseClaims": [
+        "The Cogito argument proves the physical existence of human flesh and bones before proving the mind.",
+        "Descartes concluded that because he doubts, he must not exist in any metaphysical sense."
+      ],
+      "groundingRationale": "Text affirms the act of doubting or being deceived necessitates the existence of the thinking subject ('Cogito, ergo sum').",
+      "provenance": { "page": 5, "paragraph": 2, "heading": "5. The First Certainty" }
+    },
+    {
+      "id": "phil-06",
+      "concept": "Foundationalism vs Coherentism",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Epistemic foundationalism holds that beliefs are structured like a pyramid, anchored on basic beliefs that are justified non-inferentially. Coherentism rejects basic beliefs, arguing instead that justification is holistic, structured like a web where beliefs justify one another through mutual explanatory coherence.",
+      "trueClaim": "Foundationalism grounds justification in non-inferentially justified basic beliefs, whereas coherentism relies on mutual holistic coherence.",
+      "falseClaims": [
+        "Coherentism requires every belief to be justified by an infinite linear chain of independent physical experiments.",
+        "Foundationalism claims that all beliefs in the system are basic beliefs with no inferential links."
+      ],
+      "groundingRationale": "Text contrasts foundationalism's non-inferential basic beliefs with coherentism's holistic mutual coherence.",
+      "provenance": { "page": 6, "paragraph": 3, "heading": "6. Theories of Epistemic Structure" }
+    },
+    {
+      "id": "phil-07",
+      "concept": "Agrippa's Trilemma (Münchhausen Trilemma)",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Agrippa's Trilemma asserts that any attempt to establish justification for a belief terminates in one of three unacceptable endpoints: an infinite regress of reasons, circular reasoning where propositions justify themselves, or an arbitrary dogmatic stopping point.",
+      "trueClaim": "Agrippa's Trilemma states that linear justification leads inevitably to infinite regress, circularity, or dogmatic presupposition.",
+      "falseClaims": [
+        "The Trilemma proves that all mathematical propositions can be verified without assumptions.",
+        "Agrippa proposed that sensory perception easily bypasses all three horns of the trilemma."
+      ],
+      "groundingRationale": "Text defines Agrippa's Trilemma as the challenge that justification faces infinite regress, circularity, or dogmatism.",
+      "provenance": { "page": 7, "paragraph": 1, "heading": "7. The Regress Problem" }
+    },
+    {
+      "id": "phil-08",
+      "concept": "A Priori vs A Posteriori Knowledge",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "A priori knowledge is justifiable independently of empirical experience, relying on reason or conceptual analysis alone (such as basic mathematical truths like 2 + 2 = 4). A posteriori knowledge depends essentially on empirical sensory experience or physical observation (such as 'water boils at 100 degrees Celsius at sea level').",
+      "trueClaim": "A priori knowledge is justified independently of sensory experience, whereas a posteriori knowledge relies on empirical observation.",
+      "falseClaims": [
+        "A priori knowledge is acquired exclusively through telescope observations and laboratory measurements.",
+        "Mathematical truths are strictly a posteriori because numbers are physical particles discovered in rocks."
+      ],
+      "groundingRationale": "Text distinguishes a priori knowledge independent of experience from a posteriori knowledge dependent on sensory observation.",
+      "provenance": { "page": 8, "paragraph": 2, "heading": "8. Epistemic Justification Categories" }
+    },
+    {
+      "id": "phil-09",
+      "concept": "Reliabilism in Externalist Epistemology",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Epistemic reliabilism is an externalist theory holding that a belief is justified if and only if it is produced by a generally reliable cognitive process, such as normal vision or rigorous deductive logic, regardless of whether the subject has conscious internal access to the reliability of that process.",
+      "trueClaim": "Reliabilism justifies beliefs through truth-conducive cognitive processes without requiring the agent to consciously access proof of reliability.",
+      "falseClaims": [
+        "Reliabilism requires the agent to be omniscient and consciously aware of every neural impulse in their brain.",
+        "Under reliabilism, wishful thinking and coin flipping are considered reliable cognitive processes."
+      ],
+      "groundingRationale": "Text presents reliabilism as externalist theory where justification stems from reliable cognitive processes producing the belief.",
+      "provenance": { "page": 9, "paragraph": 4, "heading": "9. Externalism and Reliabilism" }
+    },
+    {
+      "id": "phil-10",
+      "concept": "Epistemic Aporia and Intellectual Humility",
+      "difficulty": "foundational",
+      "sourceExcerpt": "In Plato's dialogues, aporia is the state of perplexity or cognitive impasse reached when interlocutors realize their prior definitions collapse under cross-examination. Far from a negative defeat, Socrates treats aporia as the indispensable starting point for genuine philosophical inquiry and intellectual humility.",
+      "trueClaim": "Aporia is a state of epistemic perplexity where recognized ignorance clears dogmatism and enables genuine philosophical inquiry.",
+      "falseClaims": [
+        "Aporia is an Athenian legal penalty requiring philosophers to pay a fine for asking questions.",
+        "Socrates viewed aporia as an embarrassing failure that must be concealed at all costs."
+      ],
+      "groundingRationale": "Text describes aporia as cognitive impasse recognizing ignorance, serving as the essential starting point for inquiry.",
+      "provenance": { "page": 10, "paragraph": 1, "heading": "10. Socratic Aporia and Inquiry" }
+    }
+  ]
+}

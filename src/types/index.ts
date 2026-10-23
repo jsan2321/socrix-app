@@ -11,7 +11,7 @@ export type QuestionDifficulty = "foundational" | "intermediate" | "advanced";
 export type ConfidenceLevel = 1 | 2 | 3 | 4 | 5;
 
 /**
- * Standard Error Response Envelope per SRS & API specification
+ * Standard error response envelope.
  */
 export interface ApiErrorEnvelope {
   error: {

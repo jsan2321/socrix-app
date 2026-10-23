@@ -10,7 +10,7 @@ const Alert = React.forwardRef<
     destructive:
       "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive bg-destructive/10",
     warning:
-      "border-amber-500/50 text-amber-600 dark:text-amber-400 [&>svg]:text-amber-500 bg-amber-500/10",
+      "border-amber-500/50 text-amber-700 dark:text-amber-300 [&>svg]:text-amber-700 dark:[&>svg]:text-amber-300 bg-amber-500/10",
     info: "border-blue-500/50 text-blue-600 dark:text-blue-400 [&>svg]:text-blue-500 bg-blue-500/10",
   };
 

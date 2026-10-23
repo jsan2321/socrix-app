@@ -13,6 +13,7 @@ export const UploadDocumentSchema = z.object({
 export const QuizRequestSchema = z.object({
   sessionId: z.string().uuid("Invalid session ID format"),
   excludeChunkIds: z.array(z.string().uuid()).optional().default([]),
+  requestId: z.string().uuid("Invalid request ID format").optional(),
 });
 
 /**
@@ -29,6 +30,8 @@ export const EvidenceRequestSchema = z.object({
 export const CreateSessionSchema = z.object({
   documentId: z.string().uuid("Invalid document ID format"),
   mode: z.enum(["identify_truth", "identify_both_lies"]).default("identify_truth"),
+  questionTarget: z.number().int().positive().nullable().optional(),
+  quizLanguage: z.enum(["auto", "en", "es"]).default("auto").optional(),
 });
 
 /**
@@ -75,9 +78,18 @@ export const SessionResultsResponseSchema = z.object({
   confidenceGapAlert: z.boolean(),
 });
 
+export const ApiErrorResponseSchema = z.object({
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.unknown().optional(),
+  }),
+});
+
 export type UploadDocumentInput = z.infer<typeof UploadDocumentSchema>;
 export type QuizRequestInput = z.infer<typeof QuizRequestSchema>;
 export type EvidenceRequestInput = z.infer<typeof EvidenceRequestSchema>;
 export type CreateSessionInput = z.infer<typeof CreateSessionSchema>;
 export type AnswerSubmissionInput = z.infer<typeof AnswerSubmissionSchema>;
 export type SessionResultsResponse = z.infer<typeof SessionResultsResponseSchema>;
+export type ApiErrorResponse = z.infer<typeof ApiErrorResponseSchema>;

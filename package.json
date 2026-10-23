@@ -10,15 +10,25 @@
     "lint": "eslint .",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:security": "tsx scripts/secret-scan.ts && vitest run tests/unit/secret-scanning.test.ts",
+    "generate:fixtures": "tsx scripts/generate-test-pdfs.ts",
+    "evaluate:providers": "tsx scripts/evaluate-providers.ts",
+    "benchmark": "tsx scripts/benchmark-performance.ts",
+    "validate:release": "npm run typecheck && npm run lint && npm run test:unit && npm run test:integration && npm run test:security && npm run build",
+    "preflight:deploy": "tsx scripts/verify-deployment.ts",
+    "test:smoke:prod": "tsx scripts/smoke-production.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.48.1",
     "ai": "^4.1.17",
     "clsx": "^2.1.1",
     "js-tiktoken": "^1.0.17",
     "lucide-react": "^0.475.0",
+    "motion": "^13.4.6",
     "next": "^16.3.0",
+    "next-themes": "^0.4.6",
     "openai": "^4.83.0",
     "pdf-parse": "^1.1.1",
     "react": "^19.0.0",
@@ -27,6 +37,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/jest-dom": "^6.6.3",
@@ -42,6 +53,7 @@
     "jsdom": "^26.0.0",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.13",
     "typescript": "^5.7.3",
     "vitest": "^3.0.5"
   }

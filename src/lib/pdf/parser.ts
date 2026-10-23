@@ -1,5 +1,6 @@
 import pdfParse from "pdf-parse";
 import { AppError } from "@/lib/errors";
+import { sanitizeTextForPostgres } from "@/lib/utils";
 
 export interface PageTextData {
   pageNumber: number;
@@ -29,15 +30,16 @@ export class PdfParseParser implements PdfParser {
             let text = "";
             for (let i = 0; i < textContent.items.length; i++) {
               const item = textContent.items[i];
+              const cleaned = sanitizeTextForPostgres(item.str);
               if (i === 0) {
-                text += item.str;
+                text += cleaned;
               } else {
-                text += " " + item.str;
+                text += " " + cleaned;
               }
             }
             pageTexts.push({
               pageNumber: pageData.pageIndex + 1,
-              text: text.trim(),
+              text: sanitizeTextForPostgres(text).trim(),
             });
             return text;
           });
@@ -50,7 +52,7 @@ export class PdfParseParser implements PdfParser {
         pageCount: result.numpages || pageTexts.length || 1,
         info: result.info,
         pages: pageTexts.sort((a, b) => a.pageNumber - b.pageNumber),
-        rawText: result.text || "",
+        rawText: sanitizeTextForPostgres(result.text || ""),
       };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);

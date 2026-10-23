@@ -24,7 +24,7 @@ export function getSupabaseAdminClient(): SupabaseClient {
 }
 
 /**
- * Returns a standard Supabase client (using Anon key if provided, or Service Role Key in MVP).
+ * Returns a standard Supabase client using the anon key when available.
  */
 export function getSupabaseClient(): SupabaseClient {
   if (!supabaseClientInstance) {

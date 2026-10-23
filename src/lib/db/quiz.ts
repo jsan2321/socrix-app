@@ -23,6 +23,8 @@ export interface CreateQuizQuestionInput {
   generationModel: string;
   generationAttempts?: number;
   statements: StatementInput[];
+  sessionId?: string;
+  requestId?: string;
 }
 
 export interface QuizQuestionWithStatements {
@@ -37,6 +39,25 @@ export async function createQuizQuestionWithStatements(
   input: CreateQuizQuestionInput
 ): Promise<QuizQuestionWithStatements> {
   const supabase = getSupabaseAdminClient();
+
+  if (input.sessionId && input.requestId) {
+    const { data: questionId, error } = await supabase.rpc("persist_quiz_generation", {
+      p_session_id: input.sessionId,
+      p_request_id: input.requestId,
+      p_document_id: input.documentId,
+      p_concept: input.concept,
+      p_difficulty: input.difficulty,
+      p_grounding_chunk_ids: input.groundingChunkIds,
+      p_generation_provider: input.generationProvider,
+      p_generation_model: input.generationModel,
+      p_generation_attempts: input.generationAttempts ?? 1,
+      p_statements: input.statements,
+    });
+    if (error || !questionId) throw new AppError(`Failed to persist quiz generation: ${error?.message}`, 500, "DB_INSERT_ERROR");
+    const question = await getQuizQuestionById(questionId);
+    const statements = await getQuizStatementsByQuestionId(questionId);
+    return { question, statements };
+  }
 
   // Insert Question
   const { data: qData, error: qError } = await supabase
@@ -83,6 +104,17 @@ export async function createQuizQuestionWithStatements(
     question: questionRow,
     statements: statementRows,
   };
+}
+
+export async function getGeneratedQuestionByRequestId(sessionId: string, requestId: string): Promise<QuizQuestionWithStatements | null> {
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase.from("quiz_questions").select("id")
+    .eq("session_id", sessionId).eq("generation_request_id", requestId).maybeSingle();
+  if (error) throw new AppError(`Failed to read quiz generation: ${error.message}`, 500, "DB_QUERY_ERROR");
+  if (!data) return null;
+  const question = await getQuizQuestionById(data.id);
+  const statements = await getQuizStatementsByQuestionId(data.id);
+  return { question, statements };
 }
 
 /**

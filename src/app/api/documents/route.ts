@@ -11,49 +11,85 @@ import {
   updateDocumentStatus,
   incrementChunksEmbeddedCount,
 } from "@/lib/db/documents";
-import { AppError, ConflictError } from "@/lib/errors";
+import { AppError, ValidationError } from "@/lib/errors";
+import { enforceDistributedRateLimit, getRateLimitHeaders } from "@/lib/security/rate-limit";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser } from "@/lib/auth/require-user";
+import { getDashboardDocuments } from "@/lib/db/dashboard";
+
+import { sanitizeTextForPostgres } from "@/lib/utils";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+export async function GET(req: Request) {
+  try {
+    const user = await requireAuthenticatedUser();
+    const url = new URL(req.url);
+    const page = Math.max(1, Number(url.searchParams.get("page") ?? 1) || 1);
+    const limit = Math.min(50, Math.max(1, Number(url.searchParams.get("limit") ?? 12) || 12));
+    const result = await getDashboardDocuments(user.id, page, limit);
+    return NextResponse.json({ ...result, page, limit, hasMore: page * limit < result.total });
+  } catch (err: unknown) {
+    return formatErrorResponse(err, "Failed to retrieve document library");
+  }
+}
 
 export async function POST(req: Request) {
+  let rateLimitHeaders: Record<string, string> = {};
   try {
+    // Enforce rate limit (5 uploads/hour per IP/user)
+    const rateLimitResult = await enforceDistributedRateLimit(req, {
+      keyPrefix: "documents",
+      limit: 5,
+      windowMs: 60 * 60 * 1000,
+    });
+    rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
+
+    // Authenticate after rate limiting so every response retains abuse-control headers.
+    const user = await requireAuthenticatedUser();
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const titleInput = formData.get("title") as string | null;
 
     if (!file) {
-      return NextResponse.json(
-        {
-          error: {
-            code: "VALIDATION_ERROR",
-            message: "Missing required 'file' field in multipart form-data upload",
-          },
-        },
-        { status: 400 }
-      );
+      throw new ValidationError("Missing required 'file' field in multipart form-data upload");
     }
 
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
 
-    // 1. Validate PDF binary (MIME, Magic Bytes %PDF-, size ≤50MB, SHA-256 hash)
+    // 1. Validate PDF binary (MIME, Magic Bytes %PDF-, size, SHA-256 hash)
     const validation = validatePdfFile(fileBuffer, file.type);
 
     // 2. Duplicate SHA-256 detection against ready documents
-    const existingDoc = await getReadyDocumentByHash(validation.contentHash);
+    const existingDoc = await getReadyDocumentByHash(validation.contentHash, user.id);
     if (existingDoc) {
       return NextResponse.json(
         {
+          error: {
+            code: "CONFLICT",
+            message: "Document with matching SHA-256 hash already exists",
+            details: {
+              documentId: existingDoc.id,
+              status: "ready",
+            },
+          },
           documentId: existingDoc.id,
           status: "ready",
           message: "Document with matching SHA-256 hash already exists",
         },
-        { status: 409 }
+        { status: 409, headers: rateLimitHeaders }
       );
     }
 
-    const documentTitle = titleInput?.trim() || file.name || "Untitled PDF Document";
+    const rawTitle = titleInput?.trim() || file.name || "Untitled PDF Document";
+    const documentTitle = sanitizeTextForPostgres(rawTitle);
 
     // 3. Create 'processing' document record
     const documentRow = await createDocument({
+      userId: user.id,
       title: documentTitle,
       contentHash: validation.contentHash,
     });
@@ -80,6 +116,28 @@ export async function POST(req: Request) {
           chunks_total: chunks.length,
         })
         .eq("id", documentRow.id);
+
+      // 7b. Pre-persist unembedded chunks so /api/documents/[id]/continue can resume if interrupted
+      try {
+        await insertDocumentChunks(
+          chunks.map((c) => ({
+            documentId: documentRow.id,
+            chunkIndex: c.chunkIndex,
+            pageStart: c.pageStart,
+            pageEnd: c.pageEnd,
+            paragraphStart: c.paragraphStart,
+            paragraphEnd: c.paragraphEnd,
+            sentenceStart: c.sentenceStart,
+            sentenceEnd: c.sentenceEnd,
+            heading: c.heading ?? null,
+            text: c.text,
+            tokenCount: c.tokenCount,
+            embedding: null,
+          }))
+        );
+      } catch {
+        // Fallback gracefully if migration 0013 (nullable embedding) is not yet applied
+      }
 
       // 8. Generate vector embeddings and persist in batches of <= 96
       for (let i = 0; i < chunks.length; i += MAX_BATCH_SIZE) {
@@ -117,7 +175,7 @@ export async function POST(req: Request) {
           chunksTotal: chunks.length,
           chunksEmbeddedCount: chunks.length,
         },
-        { status: 201 }
+        { status: 201, headers: rateLimitHeaders }
       );
     } catch (ingestErr: unknown) {
       let failureReason = "unknown";
@@ -138,41 +196,6 @@ export async function POST(req: Request) {
       throw ingestErr;
     }
   } catch (err: unknown) {
-    if (err instanceof ConflictError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Unhandled ingestion failure: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Unhandled ingestion failure", rateLimitHeaders);
   }
 }

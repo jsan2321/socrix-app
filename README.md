@@ -66,6 +66,9 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # Supabase Configuration
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON=your-supabase-anon-token
 
 # AI Provider Choice ('deepseek' | 'openai' | 'qwen')
 AI_PROVIDER=deepseek
@@ -91,6 +94,11 @@ Run the SQL migration scripts in your **Supabase Dashboard -> SQL Editor** (in o
 4. `supabase/migrations/0004_quiz_questions_and_statements.sql`
 5. `supabase/migrations/0005_sessions_and_answers.sql`
 6. `supabase/migrations/0006_match_document_chunks.sql`
+7. `supabase/migrations/0007_auth_user_links.sql`
+8. `supabase/migrations/0008_dashboard_indexes.sql`
+9. `supabase/migrations/0009_quiz_generation_idempotency.sql`
+
+For confirmation and password reset emails, set the Supabase Auth Site URL to your app origin and allow redirects to `http://localhost:3000/auth/callback*` (and the equivalent URL on your deployed domain). The same Supabase anon key should be used for `SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_ANON`; the service role key must remain server only.
 
 *Alternatively, if using local Supabase CLI:*
 ```bash
@@ -119,7 +127,18 @@ npm run test:integration
 
 # Run E2E Tests (Playwright)
 npm run test:e2e
+
+# Run Complete Release Validation Suite
+npm run validate:release
+
+# Run Production Deployment Preflight Check
+npm run preflight:deploy
+
+# Run Live Production Smoke Test
+TARGET_URL=https://your-domain.vercel.app npm run test:smoke:prod
 ```
+
+For complete step-by-step production setup instructions, see the [Production Deployment Guide](../docs/deployment-guide.md).
 
 ---
 

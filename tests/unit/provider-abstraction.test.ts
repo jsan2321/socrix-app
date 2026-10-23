@@ -20,15 +20,18 @@ vi.mock("@/lib/config", () => ({
   },
 }));
 
+const mockModelsList = vi.fn().mockResolvedValue({ data: [] });
+const mockChatCreate = vi.fn();
+
 vi.mock("openai", () => {
   return {
     default: class MockOpenAI {
       models = {
-        list: vi.fn().mockResolvedValue({ data: [] }),
+        list: mockModelsList,
       };
       chat = {
         completions: {
-          create: vi.fn(),
+          create: mockChatCreate,
         },
       };
     },
@@ -38,6 +41,7 @@ vi.mock("openai", () => {
 describe("AI Provider Abstraction Layer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockModelsList.mockResolvedValue({ data: [] });
   });
 
   describe("Provider Factory Registry", () => {
@@ -90,18 +94,29 @@ describe("AI Provider Abstraction Layer", () => {
         assertProviderCapabilities(provider, { supportsNativeStructuredOutput: true })
       ).toThrow(UnsupportedCapabilityError);
     });
+
+    it("throws UnsupportedCapabilityError when streaming capability is required but missing", () => {
+      const customProvider = {
+        name: "nostream",
+        config: { capabilities: { supportsStreaming: false } },
+      } as unknown as LLMProvider;
+
+      expect(() =>
+        assertProviderCapabilities(customProvider, { supportsStreaming: true })
+      ).toThrow(UnsupportedCapabilityError);
+    });
   });
 
   describe("Structured Output Strategy Execution", () => {
-    it("executes structured generation and returns validated envelope", async () => {
+    const TestSchema = z.object({
+      greeting: z.string(),
+      score: z.number(),
+    });
+
+    it("executes native structured generation for providers with native capability", async () => {
       const provider = getProvider("openai");
 
-      const TestSchema = z.object({
-        greeting: z.string(),
-        score: z.number(),
-      });
-
-      vi.spyOn(provider, "generateStructured").mockResolvedValueOnce({
+      const spy = vi.spyOn(provider, "generateStructured").mockResolvedValueOnce({
         data: { greeting: "Hello Socratic", score: 100 },
         raw: { greeting: "Hello Socratic", score: 100 },
         attempts: 1,
@@ -119,6 +134,37 @@ describe("AI Provider Abstraction Layer", () => {
       expect(result.data.greeting).toBe("Hello Socratic");
       expect(result.data.score).toBe(100);
       expect(result.attempts).toBe(1);
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          systemPrompt: "You are a test assistant.",
+        })
+      );
+    });
+
+    it("appends constrained JSON directive for providers lacking native structured output", async () => {
+      const provider = getProvider("qwen");
+
+      const spy = vi.spyOn(provider, "generateStructured").mockResolvedValueOnce({
+        data: { greeting: "Hello Qwen", score: 95 },
+        raw: { greeting: "Hello Qwen", score: 95 },
+        attempts: 1,
+        provider: "qwen",
+        model: "qwen-plus",
+      });
+
+      const result = await withStructuredOutput(provider, {
+        systemPrompt: "Base prompt.",
+        userPrompt: "Input text.",
+        schema: TestSchema,
+        schemaName: "TestSchema",
+      });
+
+      expect(result.data.greeting).toBe("Hello Qwen");
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          systemPrompt: expect.stringContaining("[Strategy: Constrained JSON Mode]"),
+        })
+      );
     });
   });
 
@@ -127,6 +173,15 @@ describe("AI Provider Abstraction Layer", () => {
       const provider = getProvider("openai");
       const health = await provider.healthCheck();
       expect(health.ok).toBe(true);
+      expect(typeof health.latencyMs).toBe("number");
+    });
+
+    it("returns ok: false and error message when model listing fails", async () => {
+      mockModelsList.mockRejectedValueOnce(new Error("Network connection refused"));
+      const provider = getProvider("openai");
+      const health = await provider.healthCheck();
+      expect(health.ok).toBe(false);
+      expect(health.error).toContain("Network connection refused");
       expect(typeof health.latencyMs).toBe("number");
     });
   });

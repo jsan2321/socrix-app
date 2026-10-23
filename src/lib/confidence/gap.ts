@@ -1,5 +1,5 @@
 /**
- * Confidence-Accuracy Gap Calculations (FR-CONF-3)
+ * Confidence-accuracy gap calculations.
  */
 
 /**

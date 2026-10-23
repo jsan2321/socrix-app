@@ -2,10 +2,27 @@ import { NextResponse } from "next/server";
 import { CreateSessionSchema } from "@/schemas/api";
 import { getDocumentById } from "@/lib/db/documents";
 import { createSession } from "@/lib/db/sessions";
-import { AppError, NotFoundError, UnprocessableEntityError } from "@/lib/errors";
+import { UnprocessableEntityError } from "@/lib/errors";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser, requireResourceOwner } from "@/lib/auth/require-user";
+import { getDashboardSessions } from "@/lib/db/dashboard";
+
+export async function GET(req: Request) {
+  try {
+    const user = await requireAuthenticatedUser();
+    const url = new URL(req.url);
+    const page = Math.max(1, Number(url.searchParams.get("page") ?? 1) || 1);
+    const limit = Math.min(50, Math.max(1, Number(url.searchParams.get("limit") ?? 20) || 20));
+    const result = await getDashboardSessions(user.id, page, limit);
+    return NextResponse.json({ ...result, page, limit, hasMore: page * limit < result.total });
+  } catch (err: unknown) {
+    return formatErrorResponse(err, "Failed to retrieve study sessions");
+  }
+}
 
 export async function POST(req: Request) {
   try {
+    const user = await requireAuthenticatedUser();
     const body = await req.json();
     const parseResult = CreateSessionSchema.safeParse(body);
 
@@ -22,10 +39,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const { documentId, mode } = parseResult.data;
+    const { documentId, mode, questionTarget, quizLanguage } = parseResult.data;
 
     // Verify document exists and status = 'ready'
     const document = await getDocumentById(documentId);
+    requireResourceOwner(document.user_id, user.id, "Document");
     if (document.status !== "ready") {
       throw new UnprocessableEntityError(
         `Cannot create study session for document in '${document.status}' status (must be 'ready')`
@@ -34,9 +52,12 @@ export async function POST(req: Request) {
 
     const sessionToken = crypto.randomUUID();
     const session = await createSession({
+      userId: user.id,
       documentId: document.id,
       sessionToken,
       mode,
+      questionTarget,
+      quizLanguage,
     });
 
     return NextResponse.json(
@@ -47,41 +68,6 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (err: unknown) {
-    if (err instanceof NotFoundError || err instanceof UnprocessableEntityError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to create session: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Failed to create session");
   }
 }

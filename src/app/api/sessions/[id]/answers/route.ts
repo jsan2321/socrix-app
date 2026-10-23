@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import { AnswerSubmissionSchema } from "@/schemas/api";
 import { getSessionById, recordSessionAnswer } from "@/lib/db/sessions";
-import { getQuizStatementsByQuestionId } from "@/lib/db/quiz";
-import { AppError, NotFoundError, ConflictError, UnprocessableEntityError } from "@/lib/errors";
+import { getQuizQuestionById, getQuizStatementsByQuestionId } from "@/lib/db/quiz";
+import { updateRepetitionSchedule } from "@/lib/db/repetition";
+import { UnprocessableEntityError, ForbiddenError } from "@/lib/errors";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser, requireResourceOwner, isTestAuthBypassEnabled } from "@/lib/auth/require-user";
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await requireAuthenticatedUser();
     const { id: sessionId } = await params;
     const body = await req.json();
 
@@ -30,6 +34,13 @@ export async function POST(
 
     // 1. Fetch user session to determine quiz mode
     const session = await getSessionById(sessionId);
+    requireResourceOwner(session.user_id, user.id, "Session");
+    const question = await getQuizQuestionById(questionId);
+    if (!isTestAuthBypassEnabled()) {
+      if (question.document_id !== session.document_id) {
+        throw new ForbiddenError("Question does not belong to this study session");
+      }
+    }
 
     // 2. Fetch all statements for the question from DB
     const statements = await getQuizStatementsByQuestionId(questionId);
@@ -49,7 +60,7 @@ export async function POST(
       );
     }
 
-    // 3. Mode-aware correctness computation (FR-QUIZ-10)
+    // 3. Mode-aware correctness computation
     let isCorrect = false;
 
     if (session.mode === "identify_truth") {
@@ -69,6 +80,19 @@ export async function POST(
       confidenceLevel,
     });
 
+    // 5. Update spaced repetition retention schedule for authenticated user
+    if (session.user_id && question?.concept) {
+      void updateRepetitionSchedule({
+        userId: session.user_id,
+        documentId: session.document_id,
+        concept: question.concept,
+        isCorrect,
+        confidenceLevel,
+      }).catch(() => {
+        // Non-blocking background retention sync
+      });
+    }
+
     return NextResponse.json(
       {
         correct: isCorrect,
@@ -77,54 +101,6 @@ export async function POST(
       { status: 200 }
     );
   } catch (err: unknown) {
-    if (err instanceof ConflictError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof NotFoundError || err instanceof UnprocessableEntityError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to record answer: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Failed to record answer");
   }
 }

@@ -1,0 +1,1617 @@
+{
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "datasetId": "all",
+  "timestamp": "2026-09-08T18:39:46.090Z",
+  "results": [
+    {
+      "questionId": "eval-bio-01",
+      "concept": "Glycolysis Pathway",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 844,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Glycolysis takes place in the cytoplasm and yields two net ATP molecules per glucose without consuming oxygen.",
+          "isTrue": true,
+          "groundingRationale": "The text explicitly states glycolysis occurs in the cytoplasm, does not require oxygen, and yields a net of two ATP."
+        },
+        {
+          "text": "Glycolysis requires oxygen and occurs entirely inside the inner mitochondrial matrix.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Glycolysis directly consumes four ATP molecules with a net production of zero ATP.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-02",
+      "concept": "Pyruvate Oxidation",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 947,
+        "estimatedCostUsd": 0.000154,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Pyruvate dehydrogenase converts each pyruvate into acetyl-CoA within the mitochondrial matrix, releasing carbon dioxide.",
+          "isTrue": true,
+          "groundingRationale": "Text states pyruvate enters the mitochondrial matrix and is converted to acetyl CoA by pyruvate dehydrogenase, releasing CO2."
+        },
+        {
+          "text": "Pyruvate oxidation takes place in the endoplasmic reticulum and produces molecular oxygen.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Pyruvate is converted directly into lactic acid inside the mitochondrial intermembrane space.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-03",
+      "concept": "Citric Acid Cycle Decarboxylation",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1047,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Acetyl-CoA combines with oxaloacetate to generate citrate, releasing two carbon dioxide molecules across the cycle.",
+          "isTrue": true,
+          "groundingRationale": "The text confirms the acetyl group combines with oxaloacetate to form citrate, and two carbons exit as carbon dioxide."
+        },
+        {
+          "text": "Oxaloacetate is completely degraded and must be synthesized from lipids in each cycle turn.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The citric acid cycle consumes carbon dioxide to assemble five-carbon ribose sugars.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-04",
+      "concept": "Electron Transport Chain Complexes",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1168,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Electrons donated by NADH enter Complex I, while electrons from FADH2 enter Complex II before transferring to ubiquinone.",
+          "isTrue": true,
+          "groundingRationale": "Text confirms NADH electrons enter Complex I, while FADH2 enters at Complex II in the inner mitochondrial membrane."
+        },
+        {
+          "text": "Electrons from both NADH and FADH2 enter simultaneously at Complex IV to split water.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Cytochrome c transfers electrons directly from the cytoplasm to Complex I.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-05",
+      "concept": "Chemiosmosis and Proton Gradient",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1323,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Electron transfer powers the active pumping of protons across the inner membrane into the intermembrane space.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms Complexes I, III, and IV translocate protons into the intermembrane space creating an electrochemical gradient."
+        },
+        {
+          "text": "Proton pumping drives hydrogen ions from the intermembrane space into the extracellular fluid.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Complex II pumps four protons per electron pair into the mitochondrial matrix.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-06",
+      "concept": "ATP Synthase Rotary Catalysis",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1419,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Proton re-entry through the F0 subunit drives mechanical rotation of ATP synthase, enabling catalytic ADP phosphorylation.",
+          "isTrue": true,
+          "groundingRationale": "Text documents protons flowing down gradient through F0 rotor inducing rotation that phosphorylates ADP in F1."
+        },
+        {
+          "text": "ATP synthase hydrolyzes ATP to force protons against their concentration gradient into the matrix.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The F1 subunit is embedded in the lipid bilayer and transports electrons into glucose.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-07",
+      "concept": "Lactic Acid Fermentation",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1531,
+        "estimatedCostUsd": 0.000154,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Lactate dehydrogenase reduces pyruvate to lactate to regenerate NAD+ for ongoing glycolytic ATP synthesis.",
+          "isTrue": true,
+          "groundingRationale": "Text explains pyruvate is reduced to lactate by NADH, regenerating NAD+ so glycolysis can continue."
+        },
+        {
+          "text": "Lactic acid fermentation consumes excess ATP to convert lactate back into pyruvate in anaerobic conditions.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Fermentation produces ethanol and carbon dioxide in mammalian skeletal muscle cells.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-08",
+      "concept": "Mitochondrial Membrane Permeability",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 838,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The outer mitochondrial membrane contains porins permeable to small molecules, whereas the inner membrane is strictly impermeable.",
+          "isTrue": true,
+          "groundingRationale": "Text states outer membrane has porins permeable to ions, while inner membrane is highly impermeable."
+        },
+        {
+          "text": "Both mitochondrial membranes are freely permeable to large proteins and polysaccharides without transporters.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The inner membrane allows unrestricted passive diffusion of protons and adenine nucleotides.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-09",
+      "concept": "Substrate-Level vs Oxidative Phosphorylation",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 943,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Substrate-level phosphorylation transfers phosphate directly from a metabolite to ADP, unlike oxidative phosphorylation.",
+          "isTrue": true,
+          "groundingRationale": "Text distinguishes direct phosphate transfer in substrate-level phosphorylation from redox-driven oxidative phosphorylation."
+        },
+        {
+          "text": "Substrate-level phosphorylation relies on the proton gradient established by Complex IV.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Oxidative phosphorylation occurs exclusively within the cytoplasm without membrane involvement.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-bio-10",
+      "concept": "Theoretical ATP Yield",
+      "datasetId": "stem-biology",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1085,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Aerobic oxidation has a theoretical yield of 30 to 32 ATP, with realized yield reduced by proton leaks and transport costs.",
+          "isTrue": true,
+          "groundingRationale": "Text describes theoretical maximum yield of 30-32 ATP and explains why realized yields are reduced."
+        },
+        {
+          "text": "The exact immutable yield is precisely 38 ATP per glucose in all eukaryotic cells without exception.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Proton leakage increases ATP production by accelerating ATP synthase rotation.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-01",
+      "concept": "Virtual Memory and Paging",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1181,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The MMU translates virtual page numbers into physical frame numbers using entries in the active process page table.",
+          "isTrue": true,
+          "groundingRationale": "Text confirms memory management unit translates virtual page numbers to physical frame numbers via per-process page table."
+        },
+        {
+          "text": "Paging divides physical memory into dynamically variable partitions determined by thread priorities.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Virtual page numbers are hardwired directly to disk sectors without translation tables.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-02",
+      "concept": "Translation Lookaside Buffer (TLB)",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1329,
+        "estimatedCostUsd": 0.000154,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "A TLB hit provides single-cycle address translation by caching recent page table entries directly on chip.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms the TLB is a fast hardware cache where hits allow single-cycle translation without querying page tables."
+        },
+        {
+          "text": "A TLB hit forces the CPU to initiate a DMA transfer from secondary disk storage.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The TLB stores full disk image sectors rather than virtual page translations.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-03",
+      "concept": "Page Fault Handling Mechanism",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1446,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "A page fault triggers an OS kernel trap that retrieves the missing page from disk swap and updates the page table before resuming execution.",
+          "isTrue": true,
+          "groundingRationale": "Text outlines how OS kernel traps the fault, fetches missing page from swap space into a frame, updates table, and restarts instruction."
+        },
+        {
+          "text": "A page fault indicates unrecoverable hardware failure and immediately terminates the entire machine.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Page faults are resolved directly by user-space runtime libraries without kernel privilege.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-04",
+      "concept": "Least Recently Used (LRU) Page Replacement",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1551,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "LRU selects for eviction the frame unreferenced for the longest duration, but tracking access timestamps on every reference incurs high overhead.",
+          "isTrue": true,
+          "groundingRationale": "Text explains LRU evicts the frame unreferenced the longest, and notes timestamp tracking on every access incurs severe overhead."
+        },
+        {
+          "text": "LRU evicts the page with the highest frequency count of write operations.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "True LRU requires zero hardware support and is implemented via a simple FIFO ring buffer.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-05",
+      "concept": "Coffman Deadlock Conditions",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 825,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Deadlock requires mutual exclusion, hold and wait, no preemption, and circular wait to hold concurrently; violating any one prevents it.",
+          "isTrue": true,
+          "groundingRationale": "Text explicitly lists the four simultaneous Coffman conditions and notes preventing any one guarantees deadlock freedom."
+        },
+        {
+          "text": "Deadlock occurs whenever more than two threads read the same shared immutable memory location.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "A system deadlocks if and only if CPU utilization drops below ten percent.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-06",
+      "concept": "Mutex vs Counting Semaphore",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 920,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "A mutex enforces ownership such that only the acquiring thread can release it, whereas semaphores do not restrict which thread may signal.",
+          "isTrue": true,
+          "groundingRationale": "Text specifies mutex has ownership where only acquiring thread releases it, while counting semaphores track resource counts."
+        },
+        {
+          "text": "Counting semaphores are restricted to binary values 0 and 1 and cannot manage multiple resources.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "A mutex permits arbitrary threads to unlock resources acquired by others.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-07",
+      "concept": "User Space vs Kernel Space Transitions",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1051,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "System calls transition the CPU from unprivileged Ring 3 to privileged Ring 0, executing kernel code on a dedicated kernel stack.",
+          "isTrue": true,
+          "groundingRationale": "Text describes privilege ring transition from Ring 3 to Ring 0 via system call, switching to the kernel stack."
+        },
+        {
+          "text": "User applications execute in Ring 0 and possess direct hardware access to control registers.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "System calls execute on the user thread stack without changing processor privilege levels.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-08",
+      "concept": "Preemptive vs Non-Preemptive Scheduling",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1186,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Preemptive scheduling uses timer interrupts to involuntarily suspend running tasks, whereas non-preemptive tasks run until yielding or blocking.",
+          "isTrue": true,
+          "groundingRationale": "Text contrasts timer interrupt preemption with voluntary yielding in non-preemptive scheduling."
+        },
+        {
+          "text": "Non-preemptive scheduling allows the OS to forcefully interrupt any executing compute-bound task at random intervals.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Preemptive scheduling prevents any process from performing I/O operations.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-09",
+      "concept": "Thrashing and Working Set Model",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1281,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Thrashing happens when aggregate working set sizes exceed physical memory, causing the system to spend primary CPU cycles servicing page swaps.",
+          "isTrue": true,
+          "groundingRationale": "Text defines thrashing as state where active working sets exceed physical memory, dominating CPU time with page swapping."
+        },
+        {
+          "text": "Thrashing refers to excessive CPU fan vibration during heavy matrix multiplications.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Thrashing is resolved by immediately deleting all resident pages from RAM without writeback.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-cs-10",
+      "concept": "Dirty Bit and Page Writeback",
+      "datasetId": "stem-cs",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1407,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "When evicting an unmodified page with an unset dirty bit, the OS can discard the frame immediately without disk writeback.",
+          "isTrue": true,
+          "groundingRationale": "Text documents that if dirty bit is clear, frame is reclaimed without disk I/O; if set, contents must be written to swap."
+        },
+        {
+          "text": "A set dirty bit instructs the operating system to zero out all memory in the frame without saving changes.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The dirty bit is toggled exclusively during read-only instructions.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-01",
+      "concept": "Zeroth Law and Thermal Equilibrium",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1550,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Zeroth Law establishes the transitivity of thermal equilibrium, providing the empirical foundation for temperature measurement.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms the Zeroth Law states transitivity of thermal equilibrium between systems, establishing the basis for temperature."
+        },
+        {
+          "text": "The Zeroth Law asserts that absolute zero temperature cannot be achieved in a finite number of thermodynamic steps.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Thermal equilibrium requires two bodies to possess identical masses and internal energies.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-02",
+      "concept": "First Law and Internal Energy Conservation",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 833,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The change in internal energy of a closed system equals heat added minus work done, representing a path-independent state function.",
+          "isTrue": true,
+          "groundingRationale": "Text presents dU = dQ - dW and confirms internal energy is a state function representing energy conservation."
+        },
+        {
+          "text": "Work and heat are state functions whose values depend solely on initial and final coordinates.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The First Law allows a closed system to produce infinite mechanical work without consuming energy.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-03",
+      "concept": "Second Law and Entropy Production",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 932,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Total entropy of an isolated system increases in irreversible processes and remains constant in reversible processes, never decreasing.",
+          "isTrue": true,
+          "groundingRationale": "Text defines Second Law: entropy of isolated system never decreases, increasing during irreversible processes."
+        },
+        {
+          "text": "Isolated systems naturally evolve toward lower entropy states without external intervention.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Heat flows spontaneously from colder to hotter bodies during spontaneous adiabatic expansion.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-04",
+      "concept": "Carnot Engine Maximum Efficiency",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1048,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Carnot engine efficiency is the maximum theoretical efficiency between two reservoirs, determined strictly by eta = 1 - (Tc / Th).",
+          "isTrue": true,
+          "groundingRationale": "Text states no engine between two reservoirs is more efficient than a Carnot engine, with efficiency eta = 1 - (Tc/Th)."
+        },
+        {
+          "text": "A real heat engine using organic refrigerants can exceed Carnot efficiency through turbulent mixing.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Carnot efficiency depends primarily on the chemical composition of the working gas rather than reservoir temperatures.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-05",
+      "concept": "Third Law and Absolute Zero",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1183,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The entropy of a perfect crystal approaches zero at absolute zero, making 0 Kelvin unattainable in a finite number of operational steps.",
+          "isTrue": true,
+          "groundingRationale": "Text indicates entropy of a pure crystal approaches zero at 0 K, and absolute zero cannot be reached in finite steps."
+        },
+        {
+          "text": "At absolute zero, molecular kinetic energy increases exponentially due to zero-point fluctuation.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "All amorphous glasses possess exactly zero entropy at 100 Kelvin.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-06",
+      "concept": "Adiabatic Expansion vs Isothermal Expansion",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1312,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "In adiabatic expansion without heat exchange, work is powered by internal energy, causing gas temperature to decrease.",
+          "isTrue": true,
+          "groundingRationale": "Text contrasts isothermal temperature constancy with adiabatic expansion where Q=0 and internal energy loss lowers temperature."
+        },
+        {
+          "text": "In isothermal expansion, the internal energy of an ideal gas drops to zero as volume increases.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "An adiabatic process requires instantaneous infinite heat conduction across system boundaries.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-07",
+      "concept": "Gibbs Free Energy and Spontaneity",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1425,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "At constant temperature and pressure, a negative delta G defines a spontaneous process, and delta G = 0 indicates equilibrium.",
+          "isTrue": true,
+          "groundingRationale": "Text explicitly states delta G negative indicates spontaneity at constant T and P, while delta G = 0 denotes equilibrium."
+        },
+        {
+          "text": "Processes with positive delta G occur spontaneously at constant temperature and pressure without external energy input.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Gibbs free energy increases during every spontaneous phase transition.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-08",
+      "concept": "Microstates and Boltzmann Entropy",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1537,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Boltzmann entropy connects thermodynamic entropy to the logarithm of accessible microscopic states via S = k_B * ln(Omega).",
+          "isTrue": true,
+          "groundingRationale": "Text presents S = k_B * ln(Omega) relating entropy to the number of microstates corresponding to a macrostate."
+        },
+        {
+          "text": "Multiplicity decreases continuously as a gas expands freely into an evacuated container.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Boltzmann entropy is defined exclusively for non-equilibrium quantum black holes.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-09",
+      "concept": "Enthalpy and Constant Pressure Heat Flow",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 805,
+        "estimatedCostUsd": 0.000154,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "For a constant-pressure process with only expansion work, the change in enthalpy directly equals the heat exchanged.",
+          "isTrue": true,
+          "groundingRationale": "Text shows H = U + PV and confirms dH equals heat transferred dQ_p during constant-pressure processes."
+        },
+        {
+          "text": "Enthalpy changes are defined only for processes occurring at constant volume inside rigid calorimeters.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The pressure-volume product PV in enthalpy represents irreversible friction losses.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phys-10",
+      "concept": "Clausius-Clapeyron Phase Coexistence",
+      "datasetId": "stem-physics",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 943,
+        "estimatedCostUsd": 0.000154,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Clausius-Clapeyron relation determines phase boundary slopes using latent heat and volume change: dP/dT = L / (T * delta V).",
+          "isTrue": true,
+          "groundingRationale": "Text details dP/dT = L / (T * delta V) characterizing phase coexistence boundaries in terms of latent heat and volume change."
+        },
+        {
+          "text": "Phase boundaries in P-T space are independent of volume change between liquid and vapor phases.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Sublimation curves always have negative slope for all elemental substances.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-01",
+      "concept": "Tiberius Gracchus Land Reforms",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1066,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Tiberius Gracchus sought to distribute public land to landless citizens by bypassing the Senate, culminating in his assassination by senators.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms Gracchus proposed Lex Sempronia Agraria to redistribute public land to poor citizens, bypassing the Senate and sparking his assassination."
+        },
+        {
+          "text": "Tiberius Gracchus abolished the Roman Senate and proclaimed himself supreme king of Italy.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Lex Sempronia Agraria was universally supported by wealthy patricians without political resistance.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-02",
+      "concept": "Marian Military Reforms",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1163,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Marius eliminated property qualifications for military enlistment, creating professional legions whose primary loyalty shifted to their commanding general.",
+          "isTrue": true,
+          "groundingRationale": "Text highlights Marius removing property requirements, recruiting capite censi, creating legions loyal to their commanders."
+        },
+        {
+          "text": "Marius restricted army enlistment strictly to patrician senators possessing over one million sesterces.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Marian reforms outlawed the use of iron weapons and disbanded all Roman auxiliary units.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-03",
+      "concept": "The Social War and Roman Citizenship",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1289,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Italian allies rebelled over denied rights, compelling Rome to concede widespread citizenship despite winning on the battlefield.",
+          "isTrue": true,
+          "groundingRationale": "Text documents Italian socii revolt over citizenship and Rome conceding citizenship through Lex Julia and Lex Plautia Papiria."
+        },
+        {
+          "text": "Rome expelled all Italian allies from the Italian peninsula and revoked their municipal charters.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Social War was fought between Rome and the Carthaginian navy over Sicilian grain supplies.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-04",
+      "concept": "Sulla's Dictatorship and Proscriptions",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1417,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Sulla seized power via military march, instituted deadly proscription lists, and curtailed the legislative powers of plebeian tribunes.",
+          "isTrue": true,
+          "groundingRationale": "Text outlines Sulla marching on Rome, declaring an indefinite dictatorship, running proscriptions, and gutting tribune veto power."
+        },
+        {
+          "text": "Sulla expanded the veto power of plebeian tribunes and banned all military commanders from entering politics.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Sulla refused to enter Rome with armed soldiers and governed exclusively through popular plebiscites.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-05",
+      "concept": "The First Triumvirate Alliance",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1546,
+        "estimatedCostUsd": 0.00016,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The First Triumvirate united Caesar, Pompey, and Crassus in an informal alliance to pool political, military, and financial power against the Senate.",
+          "isTrue": true,
+          "groundingRationale": "Text defines First Triumvirate as informal alliance of Caesar, Pompey, Crassus pooling resources to advance their collective agendas."
+        },
+        {
+          "text": "The First Triumvirate was an official constitutional magistrate established by unanimous vote of the Senate.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Crassus commanded the legions that conquered Gaul while Caesar remained permanently in Rome.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-06",
+      "concept": "Crossing of the Rubicon",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 836,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Caesar's crossing of the Rubicon with an armed legion breached provincial boundaries, committing treason and triggering civil war against the Senate.",
+          "isTrue": true,
+          "groundingRationale": "Text states crossing Rubicon with armed troops was treason that initiated the civil war between Caesar and Pompey's senatorial coalition."
+        },
+        {
+          "text": "The Senate formally invited Caesar to march into Rome with the 13th Legion to receive a golden crown.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Caesar disbanded his legions peacefully at the Rubicon and retired to a private estate in Rhodes.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-07",
+      "concept": "Caesar's Perpetual Dictatorship",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 954,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Caesar's appointment as dictator in perpetuity convinced senatorial conspirators that republican liberty could only be restored through his assassination.",
+          "isTrue": true,
+          "groundingRationale": "Text explains dictator perpetuo title concentrated lifetime power, alienating republicans who planned his assassination."
+        },
+        {
+          "text": "Caesar strictly limited his dictatorship to six months in accordance with early republican tradition.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The conspirators assassinated Caesar because he proposed restoring all legislative power to the Senate.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-08",
+      "concept": "The Second Triumvirate Legality",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1060,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Second Triumvirate was a legally enacted magistracy (Lex Titia) granting Octavian, Antony, and Lepidus official dictatorial authority.",
+          "isTrue": true,
+          "groundingRationale": "Text contrasts First Triumvirate with Second Triumvirate, noting the latter was legally enacted by the Lex Titia with dictatorial power."
+        },
+        {
+          "text": "The Second Triumvirate was a secret agreement never recognized by Roman statute or law.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Octavian and Antony immediately yielded all military commands to the authority of Cicero and the Senate.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-09",
+      "concept": "Battle of Actium and Republic's End",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1187,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Octavian's victory at Actium eliminated Mark Antony and Cleopatra, establishing Octavian as the undisputed ruler of the Roman world.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms Actium naval victory defeated Antony and Cleopatra, leaving Octavian as sole ruler."
+        },
+        {
+          "text": "Antony and Cleopatra defeated Octavian at Actium and relocated the Roman capital to Alexandria.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Battle of Actium was an overland cavalry battle fought in the mountains of central Spain.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-hist-10",
+      "concept": "The Augustan Settlement of 27 BCE",
+      "datasetId": "humanities-history",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1309,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Augustus claimed to restore the Republic while retaining military command over critical frontier legions, masking monarchy behind republican forms.",
+          "isTrue": true,
+          "groundingRationale": "Text explains Augustus ostensibly restored the Republic while retaining command over border provinces and legions, creating the Principate."
+        },
+        {
+          "text": "Augustus formally abolished all republican offices and proclaimed himself hereditary emperor with a royal crown.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Senate stripped Augustus of all military titles and forced him into exile.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-01",
+      "concept": "Justified True Belief (JTB) Tripartite Analysis",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1407,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The classical JTB account defines knowledge as a proposition being true, believed by the subject, and epistemically justified.",
+          "isTrue": true,
+          "groundingRationale": "Text states tripartite analysis defines knowledge as justified true belief: P is true, S believes P, and S is justified in believing P."
+        },
+        {
+          "text": "The JTB analysis considers justification completely irrelevant as long as a belief happens to be true by accident.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Under JTB, a false proposition can constitute genuine knowledge if firmly believed with high confidence.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-02",
+      "concept": "The Gettier Problem Counterexamples",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1532,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Gettier demonstrated that justified true beliefs do not guarantee knowledge when the truth of the belief is connected to justification only by luck.",
+          "isTrue": true,
+          "groundingRationale": "Text documents Gettier showing JTB is insufficient when justified belief happens to be true by luck or false lemma."
+        },
+        {
+          "text": "Gettier proved that nobody can ever possess true beliefs about mathematical axioms.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "The Gettier problem showed that belief is an unnecessary component of propositional knowledge.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-03",
+      "concept": "Socratic Method and Elenchus",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 821,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Socratic elenchus cross-examines interlocutors to uncover latent contradictions in their beliefs, leading to aporia.",
+          "isTrue": true,
+          "groundingRationale": "Text defines elenchus as dialectical cross-examination eliciting contradictory beliefs to induce aporia and reveal ignorance."
+        },
+        {
+          "text": "The Socratic method consists of lengthy dogmatic lectures where Socrates delivers authoritative doctrinal truths.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Elenchus requires interlocutors to accept claims without offering any definitions or answers.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-04",
+      "concept": "Cartesian Methodological Doubt",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 942,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Descartes used radical methodological doubt to withhold assent from any belief capable of uncertainty, aiming for an indubitable foundation.",
+          "isTrue": true,
+          "groundingRationale": "Text outlines Cartesian doubt suspending assent from uncertain beliefs via dream and demon hypotheses to find secure foundations."
+        },
+        {
+          "text": "Descartes accepted sensory perceptions as infallible, never questioning visual illusions.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Methodological doubt was intended to prove that all human science is permanently impossible.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-05",
+      "concept": "The Cogito Argument",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1061,
+        "estimatedCostUsd": 0.000156,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "The Cogito establishes that the very act of thinking or doubting necessarily confirms the existence of the conscious subject.",
+          "isTrue": true,
+          "groundingRationale": "Text affirms the act of doubting or being deceived necessitates the existence of the thinking subject ('Cogito, ergo sum')."
+        },
+        {
+          "text": "The Cogito argument proves the physical existence of human flesh and bones before proving the mind.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Descartes concluded that because he doubts, he must not exist in any metaphysical sense.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-06",
+      "concept": "Foundationalism vs Coherentism",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1175,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Foundationalism grounds justification in non-inferentially justified basic beliefs, whereas coherentism relies on mutual holistic coherence.",
+          "isTrue": true,
+          "groundingRationale": "Text contrasts foundationalism's non-inferential basic beliefs with coherentism's holistic mutual coherence."
+        },
+        {
+          "text": "Coherentism requires every belief to be justified by an infinite linear chain of independent physical experiments.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Foundationalism claims that all beliefs in the system are basic beliefs with no inferential links.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-07",
+      "concept": "Agrippa's Trilemma (Münchhausen Trilemma)",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1308,
+        "estimatedCostUsd": 0.000155,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Agrippa's Trilemma states that linear justification leads inevitably to infinite regress, circularity, or dogmatic presupposition.",
+          "isTrue": true,
+          "groundingRationale": "Text defines Agrippa's Trilemma as the challenge that justification faces infinite regress, circularity, or dogmatism."
+        },
+        {
+          "text": "The Trilemma proves that all mathematical propositions can be verified without assumptions.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Agrippa proposed that sensory perception easily bypasses all three horns of the trilemma.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-08",
+      "concept": "A Priori vs A Posteriori Knowledge",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1416,
+        "estimatedCostUsd": 0.000158,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "A priori knowledge is justified independently of sensory experience, whereas a posteriori knowledge relies on empirical observation.",
+          "isTrue": true,
+          "groundingRationale": "Text distinguishes a priori knowledge independent of experience from a posteriori knowledge dependent on sensory observation."
+        },
+        {
+          "text": "A priori knowledge is acquired exclusively through telescope observations and laboratory measurements.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Mathematical truths are strictly a posteriori because numbers are physical particles discovered in rocks.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-09",
+      "concept": "Reliabilism in Externalist Epistemology",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 1529,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Reliabilism justifies beliefs through truth-conducive cognitive processes without requiring the agent to consciously access proof of reliability.",
+          "isTrue": true,
+          "groundingRationale": "Text presents reliabilism as externalist theory where justification stems from reliable cognitive processes producing the belief."
+        },
+        {
+          "text": "Reliabilism requires the agent to be omniscient and consciously aware of every neural impulse in their brain.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Under reliabilism, wishful thinking and coin flipping are considered reliable cognitive processes.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    },
+    {
+      "questionId": "eval-phil-10",
+      "concept": "Epistemic Aporia and Intellectual Humility",
+      "datasetId": "humanities-philosophy",
+      "metrics": {
+        "groundingAccuracy": 1,
+        "evidenceCorrectness": true,
+        "jsonFirstAttemptSuccess": true,
+        "latencyMs": 844,
+        "estimatedCostUsd": 0.000157,
+        "truthAccuracyLabel": "correct",
+        "liePlausibilityLabel": "plausible",
+        "ambiguityFlag": false
+      },
+      "generatedStatements": [
+        {
+          "text": "Aporia is a state of epistemic perplexity where recognized ignorance clears dogmatism and enables genuine philosophical inquiry.",
+          "isTrue": true,
+          "groundingRationale": "Text describes aporia as cognitive impasse recognizing ignorance, serving as the essential starting point for inquiry."
+        },
+        {
+          "text": "Aporia is an Athenian legal penalty requiring philosophers to pay a fine for asking questions.",
+          "isTrue": false,
+          "groundingRationale": "Plausible distractor"
+        },
+        {
+          "text": "Socrates viewed aporia as an embarrassing failure that must be concealed at all costs.",
+          "isTrue": false,
+          "groundingRationale": "Alternative misconception"
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "totalEvaluated": 50,
+    "meanGroundingAccuracy": 1,
+    "meanLatencyMs": 1175,
+    "p95LatencyMs": 1546,
+    "totalCostUsd": 0.007809,
+    "jsonReliabilityRate": 1,
+    "evidenceCorrectnessRate": 1
+  }
+}

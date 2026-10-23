@@ -12,7 +12,7 @@ export interface PdfValidationResult {
 }
 
 /**
- * Validates PDF binary stream/buffer against SRS §4.1 FR-ING-1 & FR-ING-6.
+ * Validates PDF binary stream and buffer constraints.
  * Checks MIME type, magic bytes (%PDF-), file size (≤50MB), SHA-256 hash, and scanned PDF threshold.
  */
 export function validatePdfFile(

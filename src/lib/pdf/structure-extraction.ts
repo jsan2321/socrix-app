@@ -1,4 +1,5 @@
 import { PageTextData } from "./parser";
+import { sanitizeTextForPostgres } from "@/lib/utils";
 
 export interface ParsedSentence {
   sentenceIndex: number;
@@ -30,12 +31,12 @@ export interface ParsedDocument {
 export function segmentSentences(text: string): string[] {
   if (!text || !text.trim()) return [];
 
-  // Protect common multi-letter abbreviations, titles, numbers, and single-letter initials
+  // Protect common multi-letter abbreviations, titles, numbers, and single-letter initials (English & Spanish)
   const protectedText = text
-    .replace(/\b(?:e\.g\.|i\.e\.|Dr\.|Mr\.|Mrs\.|Ms\.|Prof\.|vs\.|Fig\.|Vol\.|pp\.|p\.|st\.)/gi, (match) =>
+    .replace(/\b(?:e\.g\.|i\.e\.|p\.ej\.|Dr\.|Dra\.|Mr\.|Mrs\.|Ms\.|Sr\.|Sra\.|Prof\.|vs\.|Fig\.|Vol\.|pp\.|p\.|st\.|art\.|cap\.)/gi, (match) =>
       match.replace(/\./g, "___DOT___")
     )
-    .replace(/\b([A-Z])\./g, "$1___DOT___")
+    .replace(/\b([A-ZÁÉÍÓÚÑ])\./gi, "$1___DOT___")
     .replace(/(\d)\.(\d)/g, "$1___DOT___$2");
 
   // Split on sentence-ending punctuation followed by whitespace
@@ -55,9 +56,9 @@ export function isLikelyHeading(line: string): boolean {
   if (!trimmed || trimmed.length > 80) return false;
   if (trimmed.endsWith(".")) return false;
 
-  // Numbered headings (e.g., "1.2 Section Name", "Chapter 3") or short Title Case
-  const isNumbered = /^(?:Chapter\s+\d+|\d+(?:\.\d+)*\s+[A-Z])/i.test(trimmed);
-  const isTitleCase = /^[A-Z0-9][A-Za-z0-9\s:\-\–\—]{2,60}$/.test(trimmed);
+  // Numbered headings (e.g., "1.2 Section Name", "Chapter 3", "Capítulo 2", "Sección 1") or short Title Case
+  const isNumbered = /^(?:Chapter\s+\d+|Capítulo\s+\d+|Cap\.\s*\d+|Sección\s+\d+|\d+(?:\.\d+)*\s+[A-ZÁÉÍÓÚÑ])/i.test(trimmed);
+  const isTitleCase = /^[A-ZÁÉÍÓÚÑ0-9][A-Za-zÁÉÍÓÚáéíóúüÜñÑ0-9\s:\-\–\—]{2,60}$/.test(trimmed);
 
   return isNumbered || isTitleCase;
 }
@@ -82,23 +83,24 @@ export function extractDocumentStructure(pages: PageTextData[]): ParsedDocument 
     const paragraphs: ParsedParagraph[] = [];
 
     for (const rawP of rawParagraphs) {
+      const sanitizedP = sanitizeTextForPostgres(rawP);
       // Check if this paragraph is itself a heading
-      if (isLikelyHeading(rawP)) {
-        currentHeadingContext = rawP;
+      if (isLikelyHeading(sanitizedP)) {
+        currentHeadingContext = sanitizedP;
       }
 
       globalParagraphCount++;
-      const sentenceTexts = segmentSentences(rawP);
+      const sentenceTexts = segmentSentences(sanitizedP);
       const sentences: ParsedSentence[] = sentenceTexts.map((txt, idx) => ({
         sentenceIndex: idx + 1,
-        text: txt,
+        text: sanitizeTextForPostgres(txt),
       }));
 
       paragraphs.push({
         paragraphIndex: globalParagraphCount,
-        text: rawP,
+        text: sanitizedP,
         sentences,
-        headingContext: currentHeadingContext,
+        headingContext: sanitizeTextForPostgres(currentHeadingContext),
       });
     }
 

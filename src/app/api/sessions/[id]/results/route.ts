@@ -4,20 +4,24 @@ import { getSessionById, getSessionAnswersWithQuestions } from "@/lib/db/session
 import { getDocumentById } from "@/lib/db/documents";
 import { buildConfidenceTracerData } from "@/lib/confidence/tracer";
 import { shouldTriggerConfidenceGapAlert } from "@/lib/confidence/alert";
-import { AppError, NotFoundError } from "@/lib/errors";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser, requireResourceOwner } from "@/lib/auth/require-user";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await requireAuthenticatedUser();
     const { id: sessionId } = await params;
 
     // 1. Fetch user session
     const session = await getSessionById(sessionId);
+    requireResourceOwner(session.user_id, user.id, "Session");
 
     // 2. Fetch associated document for title
     const document = await getDocumentById(session.document_id);
+    requireResourceOwner(document.user_id, user.id, "Document");
 
     // 3. Fetch all session answers with question concept metadata
     const answers = await getSessionAnswersWithQuestions(sessionId);
@@ -44,41 +48,6 @@ export async function GET(
 
     return NextResponse.json(responsePayload, { status: 200 });
   } catch (err: unknown) {
-    if (err instanceof NotFoundError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to retrieve session results: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Failed to retrieve session results");
   }
 }

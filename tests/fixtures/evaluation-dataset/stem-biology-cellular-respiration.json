@@ -1,0 +1,137 @@
+{
+  "domain": "stem",
+  "subject": "biology",
+  "title": "Cellular Respiration and Bioenergetics",
+  "concepts": [
+    {
+      "id": "bio-01",
+      "concept": "Glycolysis Pathway",
+      "difficulty": "foundational",
+      "sourceExcerpt": "Glycolysis occurs entirely within the cytoplasm of the cell and does not require molecular oxygen. It converts one molecule of glucose into two molecules of pyruvate, producing a net yield of two ATP molecules and two NADH molecules through substrate-level phosphorylation.",
+      "trueClaim": "Glycolysis takes place in the cytoplasm and yields two net ATP molecules per glucose without consuming oxygen.",
+      "falseClaims": [
+        "Glycolysis requires oxygen and occurs entirely inside the inner mitochondrial matrix.",
+        "Glycolysis directly consumes four ATP molecules with a net production of zero ATP."
+      ],
+      "groundingRationale": "The text explicitly states glycolysis occurs in the cytoplasm, does not require oxygen, and yields a net of two ATP.",
+      "provenance": { "page": 1, "paragraph": 2, "heading": "1. Glycolysis in the Cytoplasm" }
+    },
+    {
+      "id": "bio-02",
+      "concept": "Pyruvate Oxidation",
+      "difficulty": "foundational",
+      "sourceExcerpt": "Upon entering the mitochondrial matrix, pyruvate is converted into acetyl coenzyme A by the pyruvate dehydrogenase complex. This transition reaction releases one molecule of carbon dioxide per pyruvate and reduces one NAD+ to NADH.",
+      "trueClaim": "Pyruvate dehydrogenase converts each pyruvate into acetyl-CoA within the mitochondrial matrix, releasing carbon dioxide.",
+      "falseClaims": [
+        "Pyruvate oxidation takes place in the endoplasmic reticulum and produces molecular oxygen.",
+        "Pyruvate is converted directly into lactic acid inside the mitochondrial intermembrane space."
+      ],
+      "groundingRationale": "Text states pyruvate enters the mitochondrial matrix and is converted to acetyl CoA by pyruvate dehydrogenase, releasing CO2.",
+      "provenance": { "page": 2, "paragraph": 1, "heading": "2. The Link Reaction" }
+    },
+    {
+      "id": "bio-03",
+      "concept": "Citric Acid Cycle Decarboxylation",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "In the citric acid cycle, the two-carbon acetyl group from acetyl-CoA combines with four-carbon oxaloacetate to form six-carbon citrate. Over successive enzymatic reactions, two carbons are released as carbon dioxide, regenerating oxaloacetate.",
+      "trueClaim": "Acetyl-CoA combines with oxaloacetate to generate citrate, releasing two carbon dioxide molecules across the cycle.",
+      "falseClaims": [
+        "Oxaloacetate is completely degraded and must be synthesized from lipids in each cycle turn.",
+        "The citric acid cycle consumes carbon dioxide to assemble five-carbon ribose sugars."
+      ],
+      "groundingRationale": "The text confirms the acetyl group combines with oxaloacetate to form citrate, and two carbons exit as carbon dioxide.",
+      "provenance": { "page": 3, "paragraph": 3, "heading": "3. The Citric Acid Cycle" }
+    },
+    {
+      "id": "bio-04",
+      "concept": "Electron Transport Chain Complexes",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The electron transport chain consists of four protein complexes embedded in the inner mitochondrial membrane. Electrons from NADH enter at Complex I, whereas electrons from FADH2 enter at Complex II, passing sequentially to ubiquinone and cytochrome c before reducing oxygen at Complex IV.",
+      "trueClaim": "Electrons donated by NADH enter Complex I, while electrons from FADH2 enter Complex II before transferring to ubiquinone.",
+      "falseClaims": [
+        "Electrons from both NADH and FADH2 enter simultaneously at Complex IV to split water.",
+        "Cytochrome c transfers electrons directly from the cytoplasm to Complex I."
+      ],
+      "groundingRationale": "Text confirms NADH electrons enter Complex I, while FADH2 enters at Complex II in the inner mitochondrial membrane.",
+      "provenance": { "page": 4, "paragraph": 2, "heading": "4. Electron Transport and Proton Pumping" }
+    },
+    {
+      "id": "bio-05",
+      "concept": "Chemiosmosis and Proton Gradient",
+      "difficulty": "advanced",
+      "sourceExcerpt": "As electrons travel through Complexes I, III, and IV, protons are actively translocated from the mitochondrial matrix into the intermembrane space. This creates an electrochemical proton gradient with higher proton concentration and positive charge in the intermembrane space.",
+      "trueClaim": "Electron transfer powers the active pumping of protons across the inner membrane into the intermembrane space.",
+      "falseClaims": [
+        "Proton pumping drives hydrogen ions from the intermembrane space into the extracellular fluid.",
+        "Complex II pumps four protons per electron pair into the mitochondrial matrix."
+      ],
+      "groundingRationale": "Text affirms Complexes I, III, and IV translocate protons into the intermembrane space creating an electrochemical gradient.",
+      "provenance": { "page": 5, "paragraph": 1, "heading": "5. The Chemiosmotic Mechanism" }
+    },
+    {
+      "id": "bio-06",
+      "concept": "ATP Synthase Rotary Catalysis",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Protons flow down their electrochemical gradient back into the matrix through the F0 rotor subunit of ATP synthase. The mechanical rotation of the central stalk induces conformational shifts in the catalytic beta subunits of F1, phosphorylating ADP to ATP.",
+      "trueClaim": "Proton re-entry through the F0 subunit drives mechanical rotation of ATP synthase, enabling catalytic ADP phosphorylation.",
+      "falseClaims": [
+        "ATP synthase hydrolyzes ATP to force protons against their concentration gradient into the matrix.",
+        "The F1 subunit is embedded in the lipid bilayer and transports electrons into glucose."
+      ],
+      "groundingRationale": "Text documents protons flowing down gradient through F0 rotor inducing rotation that phosphorylates ADP in F1.",
+      "provenance": { "page": 6, "paragraph": 2, "heading": "6. ATP Synthase Architecture" }
+    },
+    {
+      "id": "bio-07",
+      "concept": "Lactic Acid Fermentation",
+      "difficulty": "foundational",
+      "sourceExcerpt": "In anaerobic muscle cells, pyruvate acts as an electron acceptor and is reduced by NADH to lactate through lactate dehydrogenase. This regenerates the NAD+ pool necessary for glycolysis to continue generating ATP in the absence of oxygen.",
+      "trueClaim": "Lactate dehydrogenase reduces pyruvate to lactate to regenerate NAD+ for ongoing glycolytic ATP synthesis.",
+      "falseClaims": [
+        "Lactic acid fermentation consumes excess ATP to convert lactate back into pyruvate in anaerobic conditions.",
+        "Fermentation produces ethanol and carbon dioxide in mammalian skeletal muscle cells."
+      ],
+      "groundingRationale": "Text explains pyruvate is reduced to lactate by NADH, regenerating NAD+ so glycolysis can continue.",
+      "provenance": { "page": 7, "paragraph": 3, "heading": "7. Anaerobic Pathways" }
+    },
+    {
+      "id": "bio-08",
+      "concept": "Mitochondrial Membrane Permeability",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "The outer mitochondrial membrane contains large voltage-dependent anion channels (porins) permeable to ions and small molecules. In contrast, the inner membrane is highly impermeable, requiring specialized transport proteins like the adenine nucleotide translocase.",
+      "trueClaim": "The outer mitochondrial membrane contains porins permeable to small molecules, whereas the inner membrane is strictly impermeable.",
+      "falseClaims": [
+        "Both mitochondrial membranes are freely permeable to large proteins and polysaccharides without transporters.",
+        "The inner membrane allows unrestricted passive diffusion of protons and adenine nucleotides."
+      ],
+      "groundingRationale": "Text states outer membrane has porins permeable to ions, while inner membrane is highly impermeable.",
+      "provenance": { "page": 8, "paragraph": 1, "heading": "8. Mitochondrial Structure and Transport" }
+    },
+    {
+      "id": "bio-09",
+      "concept": "Substrate-Level vs Oxidative Phosphorylation",
+      "difficulty": "intermediate",
+      "sourceExcerpt": "Substrate-level phosphorylation directly transfers a high-energy phosphate from an intermediate metabolite to ADP. Oxidative phosphorylation uses redox energy from the electron transport chain to power ATP synthesis via the chemiosmotic proton gradient.",
+      "trueClaim": "Substrate-level phosphorylation transfers phosphate directly from a metabolite to ADP, unlike oxidative phosphorylation.",
+      "falseClaims": [
+        "Substrate-level phosphorylation relies on the proton gradient established by Complex IV.",
+        "Oxidative phosphorylation occurs exclusively within the cytoplasm without membrane involvement."
+      ],
+      "groundingRationale": "Text distinguishes direct phosphate transfer in substrate-level phosphorylation from redox-driven oxidative phosphorylation.",
+      "provenance": { "page": 9, "paragraph": 2, "heading": "9. Energetic Comparison" }
+    },
+    {
+      "id": "bio-10",
+      "concept": "Theoretical ATP Yield",
+      "difficulty": "advanced",
+      "sourceExcerpt": "Complete aerobic oxidation of one glucose molecule yields a theoretical maximum of approximately 30 to 32 ATP molecules. Realized yield is typically lower due to proton leakage across the inner membrane and the energy cost of transporting pyruvate and ADP into the matrix.",
+      "trueClaim": "Aerobic oxidation has a theoretical yield of 30 to 32 ATP, with realized yield reduced by proton leaks and transport costs.",
+      "falseClaims": [
+        "The exact immutable yield is precisely 38 ATP per glucose in all eukaryotic cells without exception.",
+        "Proton leakage increases ATP production by accelerating ATP synthase rotation."
+      ],
+      "groundingRationale": "Text describes theoretical maximum yield of 30-32 ATP and explains why realized yields are reduced.",
+      "provenance": { "page": 10, "paragraph": 4, "heading": "10. Net Energetics and Efficiency" }
+    }
+  ]
+}

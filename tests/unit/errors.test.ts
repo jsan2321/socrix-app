@@ -11,6 +11,8 @@ import {
   InsufficientEvidenceError,
   UnsupportedCapabilityError,
   ConfigurationError,
+  UnauthorizedError,
+  ForbiddenError,
 } from "@/lib/errors";
 
 describe("Typed Error Hierarchy", () => {
@@ -75,5 +77,12 @@ describe("Typed Error Hierarchy", () => {
     const err = new ConfigurationError("Missing API key");
     expect(err.statusCode).toBe(500);
     expect(err.code).toBe("CONFIGURATION_ERROR");
+  });
+
+  it("represents authentication and ownership failures without exposing records", () => {
+    expect(new UnauthorizedError().statusCode).toBe(401);
+    expect(new UnauthorizedError().code).toBe("UNAUTHORIZED");
+    expect(new ForbiddenError().statusCode).toBe(403);
+    expect(new ForbiddenError().code).toBe("FORBIDDEN");
   });
 });

@@ -1,10 +1,42 @@
 import { NextResponse } from "next/server";
 import { QuizRequestSchema } from "@/schemas/api";
 import { generateDevilsAdvocateQuiz } from "@/lib/quiz/generation";
-import { AppError, NotFoundError, UnprocessableEntityError } from "@/lib/errors";
+import { enforceDistributedRateLimit, getRateLimitHeaders } from "@/lib/security/rate-limit";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser } from "@/lib/auth/require-user";
+import type { QuizGenerationResult } from "@/lib/quiz/generation";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+function clientQuestion(persisted: QuizGenerationResult) {
+  return {
+    questionId: persisted.question.id,
+    concept: persisted.question.concept,
+    difficulty: persisted.question.difficulty,
+    mode: persisted.mode,
+    questionTarget: persisted.questionTarget ?? null,
+    groundingChunkIds: persisted.question.grounding_chunk_ids || [],
+    statements: persisted.statements.map((statement) => ({
+      statementId: statement.id,
+      text: statement.text,
+      displayOrder: statement.display_order,
+    })),
+  };
+}
 
 export async function POST(req: Request) {
+  let rateLimitHeaders: Record<string, string> = {};
   try {
+    const user = await requireAuthenticatedUser();
+    // Enforce rate limit (60 requests/hour per client IP/user)
+    const rateLimitResult = await enforceDistributedRateLimit(req, {
+      keyPrefix: "ai_operations",
+      limit: 60,
+      windowMs: 60 * 60 * 1000,
+    });
+    rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
+
     const body = await req.json();
     const parseResult = QuizRequestSchema.safeParse(body);
 
@@ -17,67 +49,57 @@ export async function POST(req: Request) {
             details: parseResult.error.flatten(),
           },
         },
-        { status: 400 }
+        { status: 400, headers: rateLimitHeaders }
       );
     }
 
-    const { sessionId, excludeChunkIds } = parseResult.data;
+    const { sessionId, excludeChunkIds, requestId } = parseResult.data;
+    const wantsStream = req.headers.get("accept")?.includes("text/event-stream") ?? false;
 
-    // Generate quiz question via quiz engine service
+    if (wantsStream) {
+      if (!requestId) {
+        return NextResponse.json({ error: { code: "VALIDATION_ERROR", message: "Streaming requests require a requestId" } }, { status: 400, headers: rateLimitHeaders });
+      }
+      const encoder = new TextEncoder();
+      let disconnected = false;
+      const stream = new ReadableStream<Uint8Array>({
+        start(controller) {
+          const send = (event: string, data: unknown) => {
+            if (!disconnected) controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+          };
+          void (async () => {
+            try {
+              const persisted = await generateDevilsAdvocateQuiz({
+                sessionId, userId: user.id, excludeChunkIds, requestId,
+                onProgress: (status) => send("status", { status }),
+              });
+              send("question", clientQuestion(persisted));
+              send("done", { requestId });
+            } catch (error) {
+              const response = formatErrorResponse(error, "Quiz generation failed");
+              const body = await response.json();
+              send("error", body);
+            } finally {
+              if (!disconnected) controller.close();
+            }
+          })();
+        },
+        cancel() { disconnected = true; },
+      });
+      return new Response(stream, {
+        headers: { ...rateLimitHeaders, "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no" },
+      });
+    }
+
     const persisted = await generateDevilsAdvocateQuiz({
       sessionId,
+      userId: user.id,
       excludeChunkIds,
+      requestId,
     });
 
-    // Format response WITHHOLDING isTrue from client for security (SRS §4.2)
-    const responsePayload = {
-      questionId: persisted.question.id,
-      concept: persisted.question.concept,
-      difficulty: persisted.question.difficulty,
-      statements: persisted.statements.map((s) => ({
-        statementId: s.id,
-        text: s.text,
-        displayOrder: s.display_order,
-      })),
-    };
-
-    return NextResponse.json(responsePayload, { status: 201 });
+    return NextResponse.json(clientQuestion(persisted), { status: 201, headers: rateLimitHeaders });
   } catch (err: unknown) {
-    if (err instanceof NotFoundError || err instanceof UnprocessableEntityError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Quiz generation failed: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Quiz generation failed", rateLimitHeaders);
   }
 }

@@ -4,6 +4,7 @@ export const DocumentRowSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   content_hash: z.string(),
+  user_id: z.string().uuid().nullable().optional(),
   status: z.enum(["processing", "ready", "failed"]),
   failure_reason: z
     .enum([
@@ -46,7 +47,8 @@ export const DocumentChunkRowSchema = z.object({
         }
       }
       return val;
-    }, z.array(z.number()))
+    }, z.array(z.number()).nullable())
+    .nullable()
     .optional(),
   created_at: z.string(),
 });
@@ -75,8 +77,11 @@ export const QuizStatementRowSchema = z.object({
 export const UserSessionRowSchema = z.object({
   id: z.string().uuid(),
   document_id: z.string().uuid(),
+  user_id: z.string().uuid().nullable().optional(),
   session_token: z.string().uuid(),
   mode: z.enum(["identify_truth", "identify_both_lies"]),
+  question_target: z.number().int().positive().nullable().optional(),
+  quiz_language: z.enum(["auto", "en", "es"]).default("auto").optional(),
   created_at: z.string(),
 });
 
@@ -91,9 +96,23 @@ export const SessionAnswerRowSchema = z.object({
   answered_at: z.string(),
 });
 
+export const RepetitionScheduleRowSchema = z.object({
+  id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  document_id: z.string().uuid(),
+  concept: z.string(),
+  interval_days: z.number().int().positive(),
+  ease_factor: z.coerce.number().positive(),
+  repetition_count: z.number().int().nonnegative(),
+  last_reviewed_at: z.string(),
+  next_review_at: z.string(),
+  created_at: z.string(),
+});
+
 export type DocumentRow = z.infer<typeof DocumentRowSchema>;
 export type DocumentChunkRow = z.infer<typeof DocumentChunkRowSchema>;
 export type QuizQuestionRow = z.infer<typeof QuizQuestionRowSchema>;
 export type QuizStatementRow = z.infer<typeof QuizStatementRowSchema>;
 export type UserSessionRow = z.infer<typeof UserSessionRowSchema>;
 export type SessionAnswerRow = z.infer<typeof SessionAnswerRowSchema>;
+export type RepetitionScheduleRow = z.infer<typeof RepetitionScheduleRowSchema>;

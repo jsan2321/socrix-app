@@ -6,7 +6,12 @@ import {
 } from "@/lib/db/documents";
 import { getChunksByDocumentId, insertDocumentChunks } from "@/lib/db/chunks";
 import { generateEmbeddings, MAX_BATCH_SIZE } from "@/lib/ai/embeddings";
-import { AppError, NotFoundError, UnprocessableEntityError } from "@/lib/errors";
+import { UnprocessableEntityError } from "@/lib/errors";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser, requireResourceOwner } from "@/lib/auth/require-user";
+
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function POST(
   req: Request,
@@ -14,7 +19,9 @@ export async function POST(
 ) {
   try {
     const { id: documentId } = await params;
+    const user = await requireAuthenticatedUser();
     const document = await getDocumentById(documentId);
+    requireResourceOwner(document.user_id, user.id, "Document");
 
     if (document.status === "ready") {
       return NextResponse.json({
@@ -35,10 +42,16 @@ export async function POST(
 
     const allChunks = await getChunksByDocumentId(documentId);
     const pendingChunks = allChunks.filter(
-      (c) => c.chunk_index >= document.chunks_embedded_count
+      (c) => !c.embedding || c.embedding.length === 0 || c.chunk_index >= document.chunks_embedded_count
     );
 
     if (pendingChunks.length === 0) {
+      if (document.chunks_total !== null && document.chunks_total !== undefined && allChunks.length < document.chunks_total) {
+        await updateDocumentStatus(documentId, "failed", "embedding_error");
+        throw new UnprocessableEntityError(
+          `Document ingestion interrupted with missing chunk data (${allChunks.length}/${document.chunks_total} chunks stored)`
+        );
+      }
       await updateDocumentStatus(documentId, "ready");
       return NextResponse.json({
         documentId: document.id,
@@ -80,41 +93,6 @@ export async function POST(
       chunksEmbeddedCount: (document.chunks_total ?? allChunks.length),
     });
   } catch (err: unknown) {
-    if (err instanceof NotFoundError || err instanceof UnprocessableEntityError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
-
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to continue document embedding: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+    return formatErrorResponse(err, "Failed to continue document embedding");
   }
 }

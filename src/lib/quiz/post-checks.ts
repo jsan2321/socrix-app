@@ -56,7 +56,7 @@ function calculateJaccardSimilarity(textA: string, textB: string): number {
 }
 
 /**
- * Executes deterministic non-LLM quality validation post generation (FR-QUIZ-9).
+ * Executes deterministic non-LLM quality validation after generation.
  */
 export function validatePostGenerationChecks(
   generated: DevilsAdvocateQuestion,

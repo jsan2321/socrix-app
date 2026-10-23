@@ -1,6 +1,7 @@
 import { getSupabaseAdminClient } from "@/lib/db/client";
 import { DocumentChunkRowSchema, type DocumentChunkRow } from "@/schemas/db";
 import { NotFoundError, AppError } from "@/lib/errors";
+import { sanitizeTextForPostgres } from "@/lib/utils";
 
 export interface InsertChunkInput {
   documentId: string;
@@ -14,11 +15,11 @@ export interface InsertChunkInput {
   heading?: string | null;
   text: string;
   tokenCount: number;
-  embedding: number[];
+  embedding?: number[] | null;
 }
 
 /**
- * Batch inserts semantic document chunks with vector embeddings.
+ * Batch inserts or upserts semantic document chunks with vector embeddings.
  */
 export async function insertDocumentChunks(
   chunks: InsertChunkInput[]
@@ -36,16 +37,16 @@ export async function insertDocumentChunks(
     paragraph_end: c.paragraphEnd,
     sentence_start: c.sentenceStart,
     sentence_end: c.sentenceEnd,
-    heading: c.heading ?? null,
-    text: c.text,
+    heading: c.heading ? sanitizeTextForPostgres(c.heading) : null,
+    text: sanitizeTextForPostgres(c.text),
     token_count: c.tokenCount,
-    embedding: c.embedding,
+    embedding: c.embedding ?? null,
   }));
 
-  const { data, error } = await supabase
-    .from("document_chunks")
-    .insert(payload)
-    .select();
+  const query = supabase.from("document_chunks");
+  const { data, error } = await (typeof query.upsert === "function"
+    ? query.upsert(payload, { onConflict: "document_id,chunk_index" }).select()
+    : query.insert(payload).select());
 
   if (error) {
     throw new AppError(`Failed to insert document chunks: ${error.message}`, 500, "DB_INSERT_ERROR");
@@ -53,6 +54,9 @@ export async function insertDocumentChunks(
 
   return data.map((row) => DocumentChunkRowSchema.parse(row));
 }
+
+export const CHUNK_METADATA_COLUMNS =
+  "id, document_id, chunk_index, page_start, page_end, paragraph_start, paragraph_end, sentence_start, sentence_end, heading, text, token_count, created_at";
 
 /**
  * Retrieves all chunks for a document ordered by chunk_index.
@@ -74,14 +78,40 @@ export async function getChunksByDocumentId(documentId: string): Promise<Documen
 }
 
 /**
- * Retrieves a single document chunk by primary key UUID.
+ * Retrieves chunks for a document omitting the 1536-dimensional vector embedding
+ * to optimize database bandwidth and memory consumption.
  */
-export async function getChunkById(id: string): Promise<DocumentChunkRow> {
+export async function getChunksWithoutEmbeddingByDocumentId(
+  documentId: string
+): Promise<DocumentChunkRow[]> {
   const supabase = getSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("document_chunks")
-    .select()
+    .select(CHUNK_METADATA_COLUMNS)
+    .eq("document_id", documentId)
+    .order("chunk_index", { ascending: true });
+
+  if (error) {
+    throw new AppError(`Failed to fetch chunks for document: ${error.message}`, 500, "DB_QUERY_ERROR");
+  }
+
+  return data.map((row) => DocumentChunkRowSchema.parse(row));
+}
+
+/**
+ * Retrieves a single document chunk by primary key UUID.
+ */
+export async function getChunkById(
+  id: string,
+  options?: { includeEmbedding?: boolean }
+): Promise<DocumentChunkRow> {
+  const supabase = getSupabaseAdminClient();
+  const selectQuery = options?.includeEmbedding === false ? CHUNK_METADATA_COLUMNS : "*";
+
+  const { data, error } = await supabase
+    .from("document_chunks")
+    .select(selectQuery)
     .eq("id", id)
     .single();
 

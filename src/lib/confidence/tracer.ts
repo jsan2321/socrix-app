@@ -24,7 +24,7 @@ export interface TracerAnswerInput {
 }
 
 /**
- * Aggregates ConfidenceTracerData series and summary rates from session answer history (FR-CONF-4).
+ * Aggregates confidence data and summary rates from session answer history.
  */
 export function buildConfidenceTracerData(
   answers: TracerAnswerInput[]

@@ -1,0 +1,32 @@
+{
+  "openai": {
+    "gpt-4o-mini": {
+      "inputPricePerMillion": 0.15,
+      "outputPricePerMillion": 0.60
+    },
+    "gpt-4o": {
+      "inputPricePerMillion": 2.50,
+      "outputPricePerMillion": 10.00
+    }
+  },
+  "qwen": {
+    "qwen-plus": {
+      "inputPricePerMillion": 0.40,
+      "outputPricePerMillion": 1.20
+    },
+    "qwen-turbo": {
+      "inputPricePerMillion": 0.05,
+      "outputPricePerMillion": 0.20
+    }
+  },
+  "deepseek": {
+    "deepseek-chat": {
+      "inputPricePerMillion": 0.14,
+      "outputPricePerMillion": 0.28
+    },
+    "deepseek-reasoner": {
+      "inputPricePerMillion": 0.55,
+      "outputPricePerMillion": 2.19
+    }
+  }
+}

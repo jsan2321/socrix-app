@@ -1,7 +1,7 @@
 export type DifficultyLevel = "foundational" | "intermediate" | "advanced";
 
 /**
- * Calculates heuristic difficulty score for grounding text passage (FR-QUIZ-2).
+ * Calculates a heuristic difficulty score for a grounding passage.
  * Evaluates sentence length, technical vocabulary density, and numeric/formula presence.
  */
 export function calculateDifficulty(text: string): DifficultyLevel {

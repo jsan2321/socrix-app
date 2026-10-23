@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, CheckCircle, ShieldAlert, ArrowRight } from "lucide-react";
+import { CheckCircle, ShieldAlert, ArrowRight, FileText, X, Sparkles } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,39 +10,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dropzone } from "@/components/upload/Dropzone";
 import { IngestionProgress } from "@/components/upload/IngestionProgress";
+import { SessionLengthPicker } from "@/components/quiz/SessionLengthPicker";
+import { QuizLanguagePicker, type QuizLanguage } from "@/components/quiz/QuizLanguagePicker";
+import { useI18n } from "@/lib/i18n/context";
+import { formatBytes } from "@/lib/utils";
 
 type UploadStep = "upload" | "ingesting" | "ready" | "error";
 
-const FAILURE_REASON_MESSAGES: Record<string, string> = {
-  encrypted: "This PDF is password-protected or encrypted. Please remove encryption and try again.",
-  likely_scanned: "This PDF appears to be a scanned document without text layer. Scanned OCR is not supported in MVP.",
-  no_extractable_text: "No readable text characters could be extracted from this PDF.",
-  malformed: "The PDF file header or structure is corrupted.",
-  embedding_error: "Vector embedding service timed out or failed.",
-  unknown: "An unexpected error occurred during document processing.",
-};
-
 export default function UploadPage() {
   const router = useRouter();
+  const { dict } = useI18n();
   const [step, setStep] = useState<UploadStep>("upload");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [mode, setMode] = useState<"identify_truth" | "identify_both_lies">("identify_truth");
+  const [chunksTotal, setChunksTotal] = useState<number>(3);
+  const [questionTarget, setQuestionTarget] = useState<number | null>(3);
+  const [quizLanguage, setQuizLanguage] = useState<QuizLanguage>("auto");
   const [isStartingSession, setIsStartingSession] = useState(false);
 
-  const handleFileSelected = async (file: File) => {
+  const handleFileSelected = (file: File) => {
+    setSelectedFile(file);
+    setErrorMessage(null);
+    if (!title.trim()) {
+      setTitle(file.name.replace(/\.pdf$/i, ""));
+    }
+  };
+
+  const handleCancelFile = () => {
+    setSelectedFile(null);
+    setTitle("");
+    setErrorMessage(null);
+  };
+
+  const handleUploadAndAnalyze = async () => {
+    if (!selectedFile) return;
+
     setIsUploading(true);
     setErrorMessage(null);
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", selectedFile);
       if (title.trim()) {
         formData.append("title", title.trim());
       } else {
-        formData.append("title", file.name.replace(/\.pdf$/i, ""));
+        formData.append("title", selectedFile.name.replace(/\.pdf$/i, ""));
       }
 
       const res = await fetch("/api/documents", {
@@ -84,13 +100,18 @@ export default function UploadPage() {
     }
   };
 
-  const handleIngestionReady = (docId: string) => {
+  const handleIngestionReady = (docId: string, total?: number) => {
     setDocumentId(docId);
+    if (typeof total === "number" && total > 0) {
+      setChunksTotal(total);
+      setQuestionTarget(total <= 3 ? total : Math.min(5, total));
+    }
     setStep("ready");
   };
 
   const handleIngestionError = (reason: string) => {
-    const readableMsg = FAILURE_REASON_MESSAGES[reason] || `Ingestion failed: ${reason}`;
+    const reasonsMap = dict.upload.failureReasons as Record<string, string>;
+    const readableMsg = reasonsMap[reason] || `${dict.ingestion.failedPrefix}: ${reason}`;
     setErrorMessage(readableMsg);
     setStep("error");
   };
@@ -103,7 +124,7 @@ export default function UploadPage() {
       const res = await fetch("/api/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ documentId, mode }),
+        body: JSON.stringify({ documentId, mode, questionTarget, quizLanguage }),
       });
 
       const data = await res.json();
@@ -133,42 +154,153 @@ export default function UploadPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-6 px-4">
       <div className="space-y-2 text-center">
-        <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
-          Document Ingestion
-        </Badge>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-100">Upload Study Material</h1>
-        <p className="text-sm text-slate-400">
-          Upload your PDF textbook chapter or lecture notes to generate source-grounded Devil&apos;s Advocate quizzes.
+        <p className="text-xs font-mono font-semibold uppercase tracking-[0.18em] text-primary">
+          {dict.upload.preTitle}
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-foreground">
+          {dict.upload.title}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {dict.upload.subtitle}
         </p>
       </div>
 
-      {/* Step 1: Upload Dropzone */}
-      {step === "upload" && (
-        <Card className="bg-slate-900/60 border-slate-800">
+      {/* Step 1: Upload Dropzone (When no file is selected yet) */}
+      {step === "upload" && !selectedFile && (
+        <Card className="border-border bg-card shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg text-slate-200">PDF File Upload</CardTitle>
-            <CardDescription className="text-slate-400">
-              Optional title & PDF drag-and-drop dropzone (max 50 MB).
+            <CardTitle className="text-lg font-serif font-bold text-card-foreground">
+              {dict.upload.cardTitle}
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              {dict.upload.cardDesc}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="doc-title" className="text-xs font-medium text-slate-300">
-                Document Title (Optional)
+              <Label htmlFor="doc-title" className="text-xs font-medium text-foreground">
+                {dict.upload.titleLabel}
               </Label>
               <Input
                 id="doc-title"
                 type="text"
-                placeholder="e.g., Biology Chapter 4 — Cellular Respiration"
+                placeholder={dict.upload.titlePlaceholder}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={isUploading}
-                className="bg-slate-950/60 border-slate-800 text-slate-200 placeholder:text-slate-600 focus:border-indigo-500"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground/70 focus:border-primary"
               />
             </div>
 
             <Dropzone onFileSelected={handleFileSelected} disabled={isUploading} />
           </CardContent>
+        </Card>
+      )}
+
+      {/* Step 1b: Staged Document Review (File selected, user can review title, cancel or analyze) */}
+      {step === "upload" && selectedFile && (
+        <Card className="border-border bg-card shadow-sm">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                {dict.upload.selectedFileLabel}
+              </Badge>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleCancelFile}
+                disabled={isUploading}
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                aria-label={dict.upload.cancelOrChangeFile}
+                title={dict.upload.cancelOrChangeFile}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <CardTitle className="text-lg font-serif font-bold text-card-foreground mt-2">
+              {dict.upload.cardTitle}
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              {dict.upload.fileReadyNotice}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-5">
+            {/* File info pill */}
+            <div className="p-4 rounded-xl border border-border bg-secondary/30 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate" title={selectedFile.name}>
+                    {selectedFile.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {dict.upload.fileSizeLabel}: {formatBytes(selectedFile.size)}
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleCancelFile}
+                disabled={isUploading}
+                className="text-xs flex-shrink-0"
+              >
+                {dict.upload.changeFileBtn}
+              </Button>
+            </div>
+
+            {/* Editable Title */}
+            <div className="space-y-2">
+              <Label htmlFor="doc-title-staged" className="text-xs font-medium text-foreground">
+                {dict.upload.titleLabel}
+              </Label>
+              <Input
+                id="doc-title-staged"
+                type="text"
+                placeholder={dict.upload.titlePlaceholder}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                disabled={isUploading}
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground/70 focus:border-primary"
+              />
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex items-center justify-between gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancelFile}
+              disabled={isUploading}
+              className="text-sm"
+            >
+              {dict.common.cancel}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleUploadAndAnalyze}
+              disabled={isUploading}
+              className="gap-2 font-medium px-6 shadow-sm"
+            >
+              {isUploading ? (
+                <>
+                  <Sparkles className="w-4 h-4 animate-spin" />
+                  <span>{dict.upload.analyzingBtn}</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  <span>{dict.upload.analyzeBtn}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          </CardFooter>
         </Card>
       )}
 
@@ -183,19 +315,19 @@ export default function UploadPage() {
 
       {/* Step 3: Ready State & Mode Selector */}
       {step === "ready" && (
-        <Card className="bg-slate-900/80 border-emerald-500/30 shadow-lg">
+        <Card className="border-primary/30 bg-card shadow-md">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
-              <Badge variant="outline" className="text-emerald-400 border-emerald-500/30">
-                Document Ingested
+              <CheckCircle className="w-5 h-5 text-primary" />
+              <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5">
+                {dict.upload.documentIngested}
               </Badge>
             </div>
-            <CardTitle className="text-xl font-bold text-slate-100 mt-2">
-              Select Your Challenge Mode
+            <CardTitle className="text-xl font-serif font-bold text-card-foreground mt-2">
+              {dict.upload.selectModeLabel}
             </CardTitle>
-            <CardDescription className="text-slate-400">
-              Choose how you want to cross-examine your knowledge against the source text.
+            <CardDescription className="text-muted-foreground">
+              {dict.upload.selectModeDesc}
             </CardDescription>
           </CardHeader>
 
@@ -205,8 +337,8 @@ export default function UploadPage() {
               onClick={() => setMode("identify_truth")}
               className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${
                 mode === "identify_truth"
-                  ? "border-indigo-500 bg-indigo-500/10 dark:bg-indigo-950/40"
-                  : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
+                  ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                  : "border-border bg-background/50 hover:border-border/80 text-muted-foreground"
               }`}
             >
               <div className="mt-0.5">
@@ -216,15 +348,15 @@ export default function UploadPage() {
                   name="quiz-mode"
                   checked={mode === "identify_truth"}
                   onChange={() => setMode("identify_truth")}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-700"
+                  className="h-4 w-4 accent-primary text-primary focus:ring-primary border-border"
                 />
               </div>
               <div className="space-y-1">
-                <label htmlFor="mode-truth" className="text-sm font-semibold text-slate-200 cursor-pointer">
-                  Identify the Truth
+                <label htmlFor="mode-truth" className="text-sm font-semibold text-foreground cursor-pointer">
+                  {dict.upload.identifyTruthTitle}
                 </label>
-                <p className="text-xs text-slate-400">
-                  Each question presents 1 true statement and 2 plausible misconceptions. Find the 1 true claim.
+                <p className="text-xs text-muted-foreground">
+                  {dict.upload.identifyTruthDesc}
                 </p>
               </div>
             </div>
@@ -234,8 +366,8 @@ export default function UploadPage() {
               onClick={() => setMode("identify_both_lies")}
               className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 ${
                 mode === "identify_both_lies"
-                  ? "border-purple-500 bg-purple-500/10 dark:bg-purple-950/40"
-                  : "border-slate-800 bg-slate-950/40 hover:border-slate-700"
+                  ? "border-primary bg-primary/10 text-foreground shadow-sm"
+                  : "border-border bg-background/50 hover:border-border/80 text-muted-foreground"
               }`}
             >
               <div className="mt-0.5">
@@ -245,17 +377,36 @@ export default function UploadPage() {
                   name="quiz-mode"
                   checked={mode === "identify_both_lies"}
                   onChange={() => setMode("identify_both_lies")}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-slate-700"
+                  className="h-4 w-4 accent-primary text-primary focus:ring-primary border-border"
                 />
               </div>
               <div className="space-y-1">
-                <label htmlFor="mode-lies" className="text-sm font-semibold text-slate-200 cursor-pointer">
-                  Identify Both Lies
+                <label htmlFor="mode-lies" className="text-sm font-semibold text-foreground cursor-pointer">
+                  {dict.upload.identifyBothLiesTitle}
                 </label>
-                <p className="text-xs text-slate-400">
-                  Select both false statements (misconceptions) before seeing any AI explanation.
+                <p className="text-xs text-muted-foreground">
+                  {dict.upload.identifyBothLiesDesc}
                 </p>
               </div>
+            </div>
+
+            {/* Session Length Picker */}
+            <div className="border-t border-border pt-4">
+              <SessionLengthPicker
+                totalChunks={chunksTotal}
+                value={questionTarget}
+                onChange={setQuestionTarget}
+                disabled={isStartingSession}
+              />
+            </div>
+
+            {/* Practice Language Picker */}
+            <div className="border-t border-border pt-4">
+              <QuizLanguagePicker
+                value={quizLanguage}
+                onChange={setQuizLanguage}
+                disabled={isStartingSession}
+              />
             </div>
           </CardContent>
 
@@ -263,14 +414,13 @@ export default function UploadPage() {
             <Button
               onClick={handleStartQuiz}
               disabled={isStartingSession}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white gap-2 font-medium px-6"
+              className="gap-2 font-medium px-6 shadow-sm"
             >
               {isStartingSession ? (
-                <span>Starting Session…</span>
+                <span>{dict.upload.startingSession}</span>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Start Cross-Examination Quiz</span>
+                  <span>{dict.upload.startCrossExam}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -281,18 +431,18 @@ export default function UploadPage() {
 
       {/* Step 4: Error State Card */}
       {step === "error" && (
-        <Card className="bg-slate-900/80 border-red-500/30">
+        <Card className="border-destructive/30 bg-destructive/5">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-red-400" />
-              <Badge variant="outline" className="text-red-400 border-red-500/30">
+              <ShieldAlert className="w-5 h-5 text-destructive" />
+              <Badge variant="outline" className="text-destructive border-destructive/30">
                 Upload Error
               </Badge>
             </div>
-            <CardTitle className="text-lg text-slate-200 mt-2">
-              Unable to Process Document
+            <CardTitle className="text-lg font-serif font-bold text-foreground mt-2">
+              {dict.upload.errorTitle}
             </CardTitle>
-            <CardDescription className="text-red-300/90 text-sm">
+            <CardDescription className="text-destructive text-sm">
               {errorMessage || "An unhandled error occurred."}
             </CardDescription>
           </CardHeader>
@@ -300,12 +450,13 @@ export default function UploadPage() {
             <Button
               onClick={() => {
                 setStep("upload");
+                setSelectedFile(null);
                 setErrorMessage(null);
               }}
               variant="outline"
-              className="border-slate-800 text-slate-300 hover:bg-slate-800"
+              className="border-border text-foreground hover:bg-secondary"
             >
-              Try Another PDF
+              {dict.upload.tryAnotherPdf}
             </Button>
           </CardFooter>
         </Card>

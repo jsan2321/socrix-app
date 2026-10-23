@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { getDocumentById } from "@/lib/db/documents";
-import { AppError } from "@/lib/errors";
+import { getDocumentById, deleteDocumentById } from "@/lib/db/documents";
+import { formatErrorResponse } from "@/lib/api-response";
+import { requireAuthenticatedUser, requireResourceOwner } from "@/lib/auth/require-user";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -9,7 +10,9 @@ interface RouteParams {
 export async function GET(_req: Request, { params }: RouteParams) {
   try {
     const { id } = await params;
+    const user = await requireAuthenticatedUser();
     const doc = await getDocumentById(id);
+    requireResourceOwner(doc.user_id, user.id, "Document");
 
     return NextResponse.json({
       documentId: doc.id,
@@ -23,28 +26,24 @@ export async function GET(_req: Request, { params }: RouteParams) {
       updatedAt: doc.updated_at,
     });
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json(
-        {
-          error: {
-            code: err.code,
-            message: err.message,
-            details: err.details,
-          },
-        },
-        { status: err.statusCode }
-      );
-    }
+    return formatErrorResponse(err, "Failed to retrieve document status");
+  }
+}
 
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      {
-        error: {
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to retrieve document status: ${message}`,
-        },
-      },
-      { status: 500 }
-    );
+export async function DELETE(_req: Request, { params }: RouteParams) {
+  try {
+    const { id } = await params;
+    const user = await requireAuthenticatedUser();
+    const doc = await getDocumentById(id);
+    requireResourceOwner(doc.user_id, user.id, "Document");
+
+    await deleteDocumentById(doc.id);
+
+    return NextResponse.json({
+      deleted: true,
+      documentId: doc.id,
+    });
+  } catch (err: unknown) {
+    return formatErrorResponse(err, "Failed to delete document");
   }
 }

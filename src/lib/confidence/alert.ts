@@ -12,7 +12,7 @@ export const FORBIDDEN_DIAGNOSTIC_TERMS = [
 ];
 
 /**
- * Determines whether the heuristic Confidence Gap Alert should be triggered (FR-CONF-5).
+ * Determines whether the confidence gap alert should be triggered.
  * Triggers when over 60% of trailing N=5 answers (>= 3 of last 5) are high-confidence (>=4) and incorrect.
  */
 export function shouldTriggerConfidenceGapAlert(

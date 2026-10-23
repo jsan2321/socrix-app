@@ -19,6 +19,18 @@ export class ValidationError extends AppError {
   }
 }
 
+export class UnauthorizedError extends AppError {
+  constructor(message = "Authentication is required", details?: unknown) {
+    super(message, 401, "UNAUTHORIZED", details);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = "You do not have access to this resource", details?: unknown) {
+    super(message, 403, "FORBIDDEN", details);
+  }
+}
+
 export class NotFoundError extends AppError {
   constructor(message: string, details?: unknown) {
     super(message, 404, "NOT_FOUND", details);

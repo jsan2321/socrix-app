@@ -1,6 +1,9 @@
 "use client";
 
 import React from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { motionTiming } from "@/lib/animations";
+import { useI18n } from "@/lib/i18n/context";
 import type { ConfidenceTracerData, ConfidenceTracerPoint } from "@/lib/confidence/tracer";
 
 export interface ConfidenceTracerChartProps {
@@ -12,12 +15,14 @@ export function ConfidenceTracerChart({
   data,
   className = "",
 }: ConfidenceTracerChartProps) {
-  const { points, rollingGap, overconfidenceRate, underconfidenceRate } = data;
+  const { points } = data;
+  const reduceMotion = useReducedMotion();
+  const { dict } = useI18n();
 
   if (points.length === 0) {
     return (
-      <div className={`p-8 text-center text-xs text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800 ${className}`}>
-        No question responses recorded for this session yet.
+      <div className={`p-8 text-center text-xs text-muted-foreground bg-card rounded-xl border border-border shadow-sm ${className}`}>
+        {dict.results.noResponses}
       </div>
     );
   }
@@ -48,7 +53,7 @@ export function ConfidenceTracerChart({
   return (
     <div className={`space-y-4 ${className}`} data-testid="confidence-tracer-chart-container">
       {/* SVG Visualization */}
-      <div className="relative border border-slate-800 bg-slate-950/60 rounded-xl p-4 overflow-x-auto">
+      <div className="relative border border-border bg-card rounded-xl p-4 overflow-x-auto shadow-sm">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full h-auto max-h-64 select-none"
@@ -65,17 +70,18 @@ export function ConfidenceTracerChart({
                   y1={y}
                   x2={width - paddingX + 10}
                   y2={y}
-                  stroke="#334155"
+                  stroke="currentColor"
+                  className="text-border"
                   strokeDasharray="4 4"
                   strokeWidth="1"
                 />
                 <text
                   x={paddingX - 18}
                   y={y + 4}
-                  fill="#94a3b8"
+                  fill="currentColor"
                   fontSize="11"
                   textAnchor="end"
-                  className="font-mono font-medium"
+                  className="font-mono font-medium text-muted-foreground fill-current"
                 >
                   L{lvl}
                 </text>
@@ -85,10 +91,13 @@ export function ConfidenceTracerChart({
 
           {/* Line connecting points */}
           {pointCoords.length > 1 && (
-            <path
+            <motion.path
               d={pathD}
+              initial={reduceMotion ? false : { pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.28 }}
               fill="none"
-              stroke="#6366f1"
+              stroke="hsl(var(--primary))"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -103,6 +112,7 @@ export function ConfidenceTracerChart({
 
             return (
               <g key={pt.index} className="cursor-pointer group">
+                <title>{`Question ${pt.index}: ${pt.questionConcept}\nStated Confidence: Level ${pt.confidenceLevel}\nOutcome: ${pt.correct ? "Correct" : "Incorrect"}\nEvidence Viewed: ${pt.usedEvidence ? "Yes" : "No"}`}</title>
                 {/* Evidence Used halo */}
                 {pt.usedEvidence && (
                   <circle
@@ -113,15 +123,18 @@ export function ConfidenceTracerChart({
                     stroke="#f59e0b"
                     strokeWidth="1.5"
                     strokeDasharray="2 2"
-                    className="animate-pulse"
+                    className="motion-safe:animate-pulse"
                   />
                 )}
 
                 {/* Point Node */}
-                <circle
+                <motion.circle
                   cx={pt.x}
                   cy={pt.y}
                   r="7"
+                  initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ ...motionTiming, delay: reduceMotion ? 0 : pt.index * 0.06 }}
                   fill={fillColor}
                   stroke={strokeColor}
                   strokeWidth="2"
@@ -143,10 +156,10 @@ export function ConfidenceTracerChart({
                 <text
                   x={pt.x}
                   y={height - 12}
-                  fill="#94a3b8"
+                  fill="currentColor"
                   fontSize="10"
                   textAnchor="middle"
-                  className="font-mono"
+                  className="font-mono text-muted-foreground fill-current"
                 >
                   Q{pt.index}
                 </text>
@@ -154,24 +167,66 @@ export function ConfidenceTracerChart({
             );
           })}
         </svg>
+
+        {/* Visual Chart Legend */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground pt-3 border-t border-border/60 mt-2">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 border border-emerald-500 inline-block" />
+            <span>{dict.results.legendCorrect}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-600 border border-rose-500 inline-block" />
+            <span>{dict.results.legendIncorrect}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full border border-dashed border-amber-500 inline-block" />
+            <span>{dict.results.legendEvidence}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-4 h-0.5 bg-primary rounded inline-block" />
+            <span>{dict.results.legendTrajectory}</span>
+          </div>
+        </div>
       </div>
 
-      {/* Metric Rates Footer */}
-      <div className="grid grid-cols-3 gap-3 text-center text-xs">
-        <div className="p-2.5 rounded-lg border border-slate-800 bg-slate-900/60">
-          <p className="text-slate-400 font-medium">Rolling Mean Gap</p>
-          <p className="text-sm font-bold text-indigo-400 mt-0.5">{rollingGap}</p>
-        </div>
-        <div className="p-2.5 rounded-lg border border-slate-800 bg-slate-900/60">
-          <p className="text-slate-400 font-medium">Overconfidence Rate</p>
-          <p className="text-sm font-bold text-amber-400 mt-0.5">
-            {Math.round(overconfidenceRate * 100)}%
+      {/* Actionable Learning Takeaways & Metacognitive Patterns */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div className="p-3.5 rounded-lg border border-border bg-card shadow-sm space-y-1">
+          <p className="text-muted-foreground font-semibold flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" />
+            <span>{dict.results.chartTakeawayRetainedTitle}</span>
+          </p>
+          <p className="text-base font-serif font-bold text-foreground">
+            {points.filter((p) => p.correct).length} / {points.length}
+          </p>
+          <p className="text-[11px] text-muted-foreground leading-tight">
+            {dict.results.chartTakeawayRetainedDesc}
           </p>
         </div>
-        <div className="p-2.5 rounded-lg border border-slate-800 bg-slate-900/60">
-          <p className="text-slate-400 font-medium">Underconfidence Rate</p>
-          <p className="text-sm font-bold text-purple-400 mt-0.5">
-            {Math.round(underconfidenceRate * 100)}%
+
+        <div className="p-3.5 rounded-lg border border-border bg-card shadow-sm space-y-1">
+          <p className="text-muted-foreground font-semibold flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-600 inline-block" />
+            <span>{dict.results.chartTakeawayBlindSpotsTitle}</span>
+          </p>
+          <p className="text-base font-serif font-bold text-foreground">
+            {points.filter((p) => p.confidenceLevel >= 4 && !p.correct).length}
+          </p>
+          <p className="text-[11px] text-muted-foreground leading-tight">
+            {dict.results.chartTakeawayBlindSpotsDesc}
+          </p>
+        </div>
+
+        <div className="p-3.5 rounded-lg border border-border bg-card shadow-sm space-y-1">
+          <p className="text-muted-foreground font-semibold flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-sky-600 inline-block" />
+            <span>{dict.results.chartTakeawayEvidenceTitle}</span>
+          </p>
+          <p className="text-base font-serif font-bold text-foreground">
+            {points.filter((p) => p.usedEvidence).length}
+          </p>
+          <p className="text-[11px] text-muted-foreground leading-tight">
+            {dict.results.chartTakeawayEvidenceDesc}
           </p>
         </div>
       </div>

@@ -6,11 +6,15 @@ import {
   type SessionAnswerRow,
 } from "@/schemas/db";
 import { NotFoundError, ConflictError, AppError } from "@/lib/errors";
+import { isTestAuthBypassEnabled } from "@/lib/auth/require-user";
 
 export interface CreateSessionInput {
+  userId: string;
   documentId: string;
   sessionToken: string;
   mode: "identify_truth" | "identify_both_lies";
+  questionTarget?: number | null;
+  quizLanguage?: "auto" | "en" | "es" | null;
 }
 
 /**
@@ -22,9 +26,12 @@ export async function createSession(input: CreateSessionInput): Promise<UserSess
   const { data, error } = await supabase
     .from("user_sessions")
     .insert({
+      user_id: input.userId,
       document_id: input.documentId,
       session_token: input.sessionToken,
       mode: input.mode,
+      question_target: input.questionTarget ?? null,
+      quiz_language: input.quizLanguage ?? "auto",
     })
     .select()
     .single();
@@ -37,6 +44,16 @@ export async function createSession(input: CreateSessionInput): Promise<UserSess
   }
 
   return UserSessionRowSchema.parse(data);
+}
+
+/** Retrieves a session only when it belongs to the authenticated user. */
+export async function getSessionByIdForUser(id: string, userId: string): Promise<UserSessionRow> {
+  const session = await getSessionById(id);
+  // Legacy fixtures may not include ownership; production data must match exactly.
+  if (session.user_id !== userId && !isTestAuthBypassEnabled()) {
+    throw new NotFoundError(`Session with ID ${id} not found`);
+  }
+  return session;
 }
 
 /**
