@@ -1,6 +1,6 @@
-# 🎓 The Socratic Cross-Examiner — Plataforma de Evaluación Socrática con IA & RAG
+# 📖 Socrix — Aprende de tus PDFs con IA
 
-> **Elimina la ilusión de competencia mediante evaluaciones socráticas de "2 Mentiras + 1 Verdad" fundamentadas directamente en tus documentos.**
+> **Sube tus apuntes o libros en PDF y ponte a prueba con cuestionarios interactivos de "2 mentiras y 1 verdad" generados con IA.**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -10,113 +10,93 @@
 
 ---
 
-## 🌟 Descripción General
+## 💡 ¿Qué es Socrix?
 
-**The Socratic Cross-Examiner** es una plataforma educativa full-stack de práctica de recuperación (*retrieval practice*) basada en IA. A diferencia de los cuestionarios tradicionales que promueven la memorización superficial, este sistema evalúa la comprensión conceptual profunda y expone puntos ciegos de conocimiento.
+**Socrix** es una aplicación web de estudio que te ayuda a comprobar si realmente entendiste lo que leíste o si solo tienes la sensación de haberlo aprendido.
 
-El sistema procesa cualquier archivo PDF, lo divide en fragmentos semánticos respetando encabezados y coordenadas de página, y genera desafíos de **"2 Mentiras + 1 Verdad"** mediante un motor de IA que asume el rol de "Abogado del Diablo". Los distractores están diseñados deliberadamente como conceptos erróneos altamente plausibles, obligando al estudiante a discriminar con rigor la verdad y evitando la ilusión de competencia.
-
----
-
-## ✨ Características Principales
-
-- 📄 **Ingesta y Segmentación Semántica de PDFs**: Analiza documentos en memoria, extrayendo estructura jerárquica (encabezados, párrafos y números de página) con saneamiento automático contra caracteres nulos (`\u0000`).
-- ⚡ **RAG Fundamentado con pgvector (Cero Alucinaciones)**: Genera embeddings de 1536 dimensiones (`text-embedding-3-small`) indexados con **HNSW** en Supabase PostgreSQL para recuperar evidencia con procedencia exacta del documento.
-- 🎯 **Motor Socrático del "Abogado del Diablo"**: Formula preguntas de razonamiento donde dos afirmaciones son sutiles falacias plausibles y una es la verdad, invirtiendo la carga cognitiva del estudiante.
-- 📊 **Trazador de Confianza y Calibración Metacognitiva**: Registra el nivel de certeza del usuario en cada respuesta frente a su precisión real, detectando sesgos de sobreconfianza mediante gráficos interactivos y alertas de brecha de comprensión.
-- 🧠 **Repetición Espaciada (Algoritmo SM-2)**: Programa automáticamente repasos en intervalos optimizados según la dificultad y el rendimiento histórico del usuario.
-- 🛡️ **Seguridad y Resiliencia de Nivel de Producción**:
-  - Control de acceso multiusuario mediante **Supabase Auth** y **Row-Level Security (RLS)** en todas las tablas.
-  - *Rate limiting* atómico distribuido en PostgreSQL para prevenir abusos en endpoints serverless.
-  - Validación estricta con esquemas **Zod** y bucle de autoreparación ante respuestas malformadas de LLMs.
-  - Arquitectura multi-proveedor (**OpenAI**, **DeepSeek**, **Qwen**) con mecanismo de respaldo silencioso (*fallback circuit-breaker*).
-- 🌐 **Soporte Bilingüe Nativo (Español / Inglés)**: Interfaz de usuario e inferencia de preguntas completamente localizadas.
-- 📁 **Gestión de Biblioteca y Dashboard**: Flujo de carga en dos fases (previsualización/edición antes de procesar), cancelación y eliminación en cascada de documentos y sesiones.
+En lugar de hacerte preguntas típicas de memoria, Socrix analiza cualquier PDF que subas y crea preguntas de **"2 mentiras y 1 verdad"**:
+1. Plantea afirmaciones engañosas pero creíbles basadas en tu documento.
+2. Te reta a identificar cuál es la única afirmación verdadera.
+3. Te muestra el fragmento exacto del PDF original que justifica la respuesta correcta.
 
 ---
 
-## 🛠️ Stack Tecnológico
+## ✨ Funcionalidades Principales
 
-| Capa | Tecnologías |
+- 📄 **Carga de PDFs y Extracción de Texto**: Sube documentos de hasta 50 MB (limitado a 4.5 MB en Vercel). La app extrae el texto, divide los capítulos y guarda los fragmentos con su número de página original.
+- 🎯 **Preguntas Basadas 100% en el Documento**: Usa búsqueda por vectores en base de datos (`pgvector`) para que la IA responda únicamente con información del texto subido, sin inventar datos.
+- 📊 **Seguimiento de Confianza**: Antes de responder, indicas qué tan seguro estás de tu respuesta. La app te muestra si sueles tener exceso de confianza en temas que aún no dominas.
+- 🧠 **Repetición Espaciada (SM-2)**: Agenda repasos automáticos de los conceptos que más te costaron en intervalos de días calculados según tu rendimiento.
+- 👤 **Cuentas de Usuario y Biblioteca**: Inicia sesión para guardar tu historial de lectura, ver estadísticas de aciertos y gestionar tus documentos.
+- 🌐 **Totalmente Bilingüe**: Puedes usar la interfaz y generar preguntas tanto en español como en inglés.
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+| Parte | Tecnologías |
 |---|---|
-| **Frontend & Servidor** | Next.js 16 (App Router), React 19, TypeScript (Strict Mode) |
-| **Estilos & UI** | Tailwind CSS, Lucide Icons, Shadcn UI, Framer Motion |
-| **Base de Datos & Búsqueda Vectorial** | Supabase PostgreSQL 15+ con extensión `pgvector` (índices HNSW) |
-| **Autenticación & Autorización** | Supabase Auth (SSR Cookies) con políticas RLS y middleware fail-closed |
-| **Modelos de Lenguaje (LLMs)** | OpenAI (GPT-4o-mini, GPT-4o), DeepSeek V3, Qwen (Alibaba Cloud) |
+| **Frontend & Backend** | Next.js 16 (App Router), React 19, TypeScript |
+| **Diseño e Interfaz** | Tailwind CSS, Shadcn UI, Framer Motion, Lucide Icons |
+| **Base de Datos & Búsqueda Vectorial** | Supabase (PostgreSQL 15+ con extensión `pgvector`) |
+| **Autenticación** | Supabase Auth con sesiones seguras y cookies |
+| **Modelos de IA** | OpenAI (GPT-4o-mini), DeepSeek, Qwen |
 | **Embeddings** | OpenAI `text-embedding-3-small` (1536 dimensiones) |
-| **Testing & Calidad** | Vitest (38 suites de pruebas unitarias e integración), Playwright (E2E), ESLint |
+| **Pruebas y Calidad** | Vitest (248 pruebas unitarias), Playwright (E2E), ESLint |
 
 ---
 
-## 🚀 Instalación y Puesta en Marcha
+## 🚀 Cómo Ejecutar el Proyecto Localmente
 
 ### 1. Requisitos Previos
 
-- **Node.js**: v20.0.0 o superior
-- **Cuenta de Supabase**: Proyecto en [supabase.com](https://supabase.com) (o instancia local mediante Supabase CLI)
-- **API Key de IA**: OpenAI API Key (requerida para embeddings), y opcionalmente DeepSeek / Qwen.
+- **Node.js**: v20 o superior
+- **Cuenta de Supabase**: Proyecto gratuito en [supabase.com](https://supabase.com)
+- **API Key de OpenAI**: Clave de OpenAI para la generación de texto y embeddings
 
-### 2. Configuración de Variables de Entorno
+### 2. Instalación y Configuración
 
-Clona el repositorio e ingresa a la carpeta del proyecto:
+1. Clona el repositorio e instala las dependencias:
+   ```bash
+   git clone git@github.com:jsan2321/socratic-cross-examiner.git
+   cd socratic-cross-examiner
+   npm install
+   ```
 
-```bash
-git clone git@github.com:jsan2321/socratic-cross-examiner.git
-cd socratic-cross-examiner
-cp .env.example .env.local
-```
+2. Crea tu archivo `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-Configura tu archivo `.env.local`:
+3. Completa tus credenciales en `.env.local`:
+   ```env
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
 
-```env
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+   # Supabase
+   SUPABASE_URL=https://tu-proyecto.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=tu-service-role-key
+   SUPABASE_ANON_KEY=tu-anon-key
+   NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON=tu-anon-key
 
-# Supabase
-SUPABASE_URL=https://tu-proyecto.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=tu-service-role-key-secreta
-SUPABASE_ANON_KEY=tu-anon-key-publica
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON=tu-anon-key-publica
+   # IA
+   AI_PROVIDER=openai
+   AI_MODEL=gpt-4o-mini
+   AI_TEMPERATURE=0.7
+   OPENAI_API_KEY=sk-tu-clave-de-openai
 
-# Proveedor de IA ('openai' | 'deepseek' | 'qwen')
-AI_PROVIDER=openai
-AI_MODEL=gpt-4o-mini
-AI_TEMPERATURE=0.7
-
-# API Keys
-OPENAI_API_KEY=sk-tu-openai-key
-# DEEPSEEK_API_KEY=sk-tu-deepseek-key
-# QWEN_API_KEY=sk-tu-qwen-key
-
-# Embeddings y Límites
-EMBEDDING_MODEL=text-embedding-3-small
-MAX_UPLOAD_MB=50
-MAX_INGESTION_SECONDS=50
-```
+   EMBEDDING_MODEL=text-embedding-3-small
+   MAX_UPLOAD_MB=50
+   MAX_INGESTION_SECONDS=50
+   ```
 
 ### 3. Migraciones de Base de Datos
 
-Aplica los scripts SQL en el **Editor SQL de Supabase** en estricto orden secuencial:
+En el **SQL Editor** de tu panel de Supabase, ejecuta los archivos SQL de la carpeta `supabase/migrations/` en orden del `0001` al `0013`.
 
-1. `supabase/migrations/0001_init_extensions.sql` (Habilita la extensión `vector`)
-2. `supabase/migrations/0002_documents.sql`
-3. `supabase/migrations/0003_document_chunks.sql`
-4. `supabase/migrations/0004_quiz_questions_and_statements.sql`
-5. `supabase/migrations/0005_sessions_and_answers.sql`
-6. `supabase/migrations/0006_match_document_chunks.sql` (Función RPC para búsqueda por similitud)
-7. `supabase/migrations/0007_auth_user_links.sql` (Políticas RLS y vinculación de usuarios)
-8. `supabase/migrations/0008_dashboard_indexes.sql`
-9. `supabase/migrations/0009_quiz_generation_idempotency.sql`
-10. `supabase/migrations/0010_repetition_schedule.sql` (Tabla de repetición espaciada SM-2)
-11. `supabase/migrations/0011_session_question_target.sql`
-12. `supabase/migrations/0012_session_quiz_language.sql`
-13. `supabase/migrations/0013_production_hardening.sql` (Índices HNSW, chunks reanudables y rate limiting distribuido)
-
-### 4. Ejecución en Desarrollo
+### 4. Iniciar Servidor de Desarrollo
 
 ```bash
-npm install
 npm run dev
 ```
 
@@ -124,57 +104,47 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ---
 
-## 🧪 Pruebas y Validación de Calidad
-
-El proyecto cuenta con una cobertura integral de pruebas automatizadas:
+## 🧪 Pruebas Automatizadas
 
 ```bash
 # Verificación de tipos TypeScript
 npm run typecheck
 
-# Análisis estático de código (Linter)
-npm run lint
-
-# Escaneo de seguridad contra fugas de claves y secretos
-npm run test:security
-
-# Pruebas Unitarias e Integración (Vitest - 248 pruebas)
+# Pruebas unitarias e integración (248 tests con Vitest)
 npm run test:unit
 
-# Pruebas End-to-End (Playwright)
+# Pruebas End-to-End con Playwright
 npm run test:e2e
 
-# Validación de despliegue en producción (Preflight)
+# Verificación de variables y conexión antes de desplegar
 npm run preflight:deploy
-
-# Prueba de humo sobre el dominio en vivo
-TARGET_URL=https://tu-app.vercel.app npm run test:smoke:prod
 ```
 
 ---
 
-## 📁 Estructura del Código
+## 📁 Estructura del Proyecto
 
 ```
 socratic-cross-examiner/
-├── .github/workflows/      # Flujo de Integración Continua (CI en GitHub Actions)
 ├── src/
-│   ├── app/                # Next.js App Router (Páginas, Rutas de API, Auth, Dashboard)
-│   ├── components/         # Componentes React (Quiz, Dashboard, UI, Temas, Navegación)
-│   ├── hooks/              # Custom Hooks para gestión de estado y sesión
+│   ├── app/                # Rutas y páginas de Next.js (Dashboard, Quiz, Auth, API)
+│   ├── components/         # Componentes de UI (Tarjetas, Preguntas, Gráficos)
 │   ├── lib/
-│   │   ├── ai/             # Adaptadores multi-proveedor LLM y conmutación por error
-│   │   ├── auth/           # Utilidades de autenticación y comprobaciones de propiedad
-│   │   ├── confidence/     # Cálculos del Trazador de Confianza y detección de brechas
-│   │   ├── db/             # Clientes Supabase, queries relacionales y operaciones pgvector
-│   │   ├── i18n/           # Diccionarios bilingües (Español / Inglés) y contexto
-│   │   ├── pdf/            # Parser de PDF, sanitización de caracteres y chunking
-│   │   ├── repetition/     # Motor de repetición espaciada SuperMemo (SM-2)
-│   │   └── security/       # Rate limiting distribuido en PostgreSQL
-│   ├── schemas/            # Esquemas de validación Zod (Base de datos y API)
-│   └── types/              # Definiciones de tipos TypeScript
+│   │   ├── ai/             # Conexión con proveedores de IA (OpenAI, DeepSeek, Qwen)
+│   │   ├── auth/           # Gestión de usuarios y sesiones
+│   │   ├── db/             # Conexión a Supabase y consultas SQL/pgvector
+│   │   ├── i18n/           # Traducciones (Español / Inglés)
+│   │   ├── pdf/            # Procesamiento de archivos PDF
+│   │   └── repetition/     # Algoritmo de repetición espaciada SM-2
+│   ├── schemas/            # Validación de datos con Zod
+│   └── types/              # Definiciones de TypeScript
 ├── supabase/
-│   └── migrations/         # 13 migraciones versionadas en PostgreSQL + pgvector
-├── scripts/                # Scripts de auditoría de secretos, benchmark y preflight
-└── tests/                  # Suites de pruebas (Unitarias, Integración y E2E)
+│   └── migrations/         # Scripts SQL de la base de datos
+└── tests/                  # Pruebas unitarias y de integración
 ```
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT.
