@@ -278,6 +278,10 @@ export const en = {
     changeFileBtn: "Choose a different file",
     fileReadyNotice: "Document staged. You can customize the title above before analyzing.",
     fileSizeLabel: "Size",
+    guestTrialNotice: "{count} free attempt(s) remaining",
+    guestCreateAccountPrompt: "Create account to save library",
+    guestQuotaReachedTitle: "Attempt Limit Reached",
+    guestQuotaReachedDesc: "You have used your 3 free attempts. Create an account to save your library and continue studying.",
     failureReasons: {
       encrypted: "This PDF is password-protected or encrypted. Please remove encryption and try again.",
       likely_scanned: "This PDF appears to be a scanned document without text layer. Scanned OCR is not supported.",

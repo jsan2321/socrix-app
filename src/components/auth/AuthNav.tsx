@@ -32,7 +32,7 @@ export function AuthNav({ email, displayName }: { email?: string | null; display
     };
   }, []);
 
-  if (!email) {
+  if (!email || email.endsWith("@guest.socrix.internal")) {
     return (
       <div className="flex items-center gap-2 text-sm font-medium">
         <Link href="/auth/login" className="text-foreground hover:text-primary transition-colors">{dict.nav.signIn}</Link>

@@ -28,7 +28,10 @@ export async function middleware(request: NextRequest) {
     },
   });
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const isGuest = Boolean(user?.email?.endsWith("@guest.socrix.internal") || user?.user_metadata?.is_guest === true);
+
+  // Protected routes require a registered (non-guest) account
+  if (!user || isGuest) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/auth/login";
     loginUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
@@ -36,4 +39,5 @@ export async function middleware(request: NextRequest) {
   }
   return response;
 }
-export const config = { matcher: ["/upload/:path*", "/dashboard/:path*", "/account/:path*", "/quiz/:path*", "/results/:path*"] };
+
+export const config = { matcher: ["/dashboard/:path*", "/account/:path*"] };

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle, ShieldAlert, ArrowRight, FileText, X, Sparkles } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -14,6 +15,14 @@ import { SessionLengthPicker } from "@/components/quiz/SessionLengthPicker";
 import { QuizLanguagePicker, type QuizLanguage } from "@/components/quiz/QuizLanguagePicker";
 import { useI18n } from "@/lib/i18n/context";
 import { formatBytes } from "@/lib/utils";
+import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import {
+  ensureActiveSession,
+  getGuestUploadCount,
+  incrementGuestUploadCount,
+  isGuestUser,
+  MAX_GUEST_UPLOADS,
+} from "@/lib/auth/guest-session";
 
 type UploadStep = "upload" | "ingesting" | "ready" | "error";
 
@@ -31,6 +40,16 @@ export default function UploadPage() {
   const [questionTarget, setQuestionTarget] = useState<number | null>(3);
   const [quizLanguage, setQuizLanguage] = useState<QuizLanguage>("auto");
   const [isStartingSession, setIsStartingSession] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+  const [guestUploads, setGuestUploads] = useState(0);
+
+  useEffect(() => {
+    setGuestUploads(getGuestUploadCount());
+    const supabase = createBrowserSupabaseClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsGuest(!user || isGuestUser(user));
+    });
+  }, []);
 
   const handleFileSelected = (file: File) => {
     setSelectedFile(file);
@@ -49,10 +68,18 @@ export default function UploadPage() {
   const handleUploadAndAnalyze = async () => {
     if (!selectedFile) return;
 
+    if (isGuest && guestUploads >= MAX_GUEST_UPLOADS) {
+      setErrorMessage(dict.upload.guestQuotaReachedDesc);
+      setStep("error");
+      return;
+    }
+
     setIsUploading(true);
     setErrorMessage(null);
 
     try {
+      await ensureActiveSession();
+
       const formData = new FormData();
       formData.append("file", selectedFile);
       if (title.trim()) {
@@ -87,6 +114,11 @@ export default function UploadPage() {
         setErrorMessage(errorText);
         setStep("error");
         return;
+      }
+
+      if (isGuest) {
+        const next = incrementGuestUploadCount();
+        setGuestUploads(next);
       }
 
       setDocumentId(data.documentId);
@@ -165,8 +197,54 @@ export default function UploadPage() {
         </p>
       </div>
 
+      {/* Subtle Guest Trial Banner */}
+      {isGuest && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 rounded-lg border border-border/70 bg-muted/40 px-4 py-2.5 text-xs text-muted-foreground shadow-sm">
+          <span className="font-medium text-foreground flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+            {dict.upload.guestTrialNotice.replace("{count}", String(Math.max(0, MAX_GUEST_UPLOADS - guestUploads)))}
+          </span>
+          <Link
+            href="/auth/register"
+            className="font-medium text-primary hover:underline transition-colors"
+          >
+            {dict.upload.guestCreateAccountPrompt} →
+          </Link>
+        </div>
+      )}
+
+      {/* Guest Limit Exceeded Card */}
+      {isGuest && guestUploads >= MAX_GUEST_UPLOADS && step === "upload" && !selectedFile && (
+        <Card className="text-center p-8 border-border/80 bg-card shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-xl font-serif text-foreground">
+              {dict.upload.guestQuotaReachedTitle}
+            </CardTitle>
+            <CardDescription className="max-w-md mx-auto text-sm mt-2">
+              {dict.upload.guestQuotaReachedDesc}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="justify-center gap-3 pt-2">
+            <Button
+              type="button"
+              onClick={() => router.push("/auth/register")}
+              className="font-semibold"
+            >
+              {dict.nav.createAccount}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push("/auth/login")}
+            >
+              {dict.nav.signIn}
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
       {/* Step 1: Upload Dropzone (When no file is selected yet) */}
-      {step === "upload" && !selectedFile && (
+      {step === "upload" && !selectedFile && (!isGuest || guestUploads < MAX_GUEST_UPLOADS) && (
         <Card className="border-border bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg font-serif font-bold text-card-foreground">

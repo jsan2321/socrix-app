@@ -280,6 +280,10 @@ export const es: TranslationDict = {
     changeFileBtn: "Elegir otro archivo",
     fileReadyNotice: "Documento preparado. Puedes personalizar el título antes de analizarlo.",
     fileSizeLabel: "Tamaño",
+    guestTrialNotice: "{count} intento(s) gratuito(s) restante(s)",
+    guestCreateAccountPrompt: "Crea una cuenta para guardar tu biblioteca",
+    guestQuotaReachedTitle: "Límite de intentos alcanzado",
+    guestQuotaReachedDesc: "Has completado tus 3 intentos gratuitos. Crea una cuenta para guardar tu biblioteca y continuar practicando.",
     failureReasons: {
       encrypted: "Este PDF está protegido con contraseña o cifrado. Quita el cifrado e inténtalo de nuevo.",
       likely_scanned: "Este PDF parece ser un documento escaneado sin capa de texto. El OCR no está soportado.",

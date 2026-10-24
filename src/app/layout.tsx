@@ -38,6 +38,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getOptionalAuthenticatedUser();
+  const isRegisteredUser = Boolean(
+    user &&
+    !user.email?.endsWith("@guest.socrix.internal") &&
+    user.user_metadata?.is_guest !== true
+  );
+
   return (
     <html
       lang="en"
@@ -66,8 +72,15 @@ export default async function RootLayout({
                 </Link>
 
                 <nav aria-label="Main navigation" className="flex shrink-0 items-center gap-1.5 sm:gap-3">
-                  <PrimaryNav authenticated={Boolean(user)} />
-                  <AuthNav email={user?.email} displayName={typeof user?.user_metadata?.display_name === "string" ? user.user_metadata.display_name : null} />
+                  <PrimaryNav authenticated={isRegisteredUser} />
+                  <AuthNav
+                    email={isRegisteredUser ? user?.email : null}
+                    displayName={
+                      isRegisteredUser && typeof user?.user_metadata?.display_name === "string"
+                        ? user.user_metadata.display_name
+                        : null
+                    }
+                  />
                   <LanguageToggle />
                   <ThemeToggle />
                 </nav>
